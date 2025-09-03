@@ -1,0 +1,113 @@
+*
+{
+  margin: 0;
+  padding: 0;
+}
+body
+{
+  background: #f5f5f5;
+  font-family: arial, sans-serif;
+  line-height: 1.5em;
+  color: #333333;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container
+{
+  margin: 0 auto;
+  width: 600px;
+  height: 600px;
+  padding: 20px;
+}
+
+.card
+{
+  background-color: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 2px 2px 4px #ccc;
+}
+h1
+{
+  text-align: center;
+  margin-top: 70px;
+  margin-bottom: 20px;
+  font-size: 32px;
+  font-weight: bold;
+}
+ .fields
+ {
+   margin-bottom: 16px;
+ }
+
+.btn:hover
+{
+  text-align: center;
+  color:white;
+  background-color: dimgray;
+  padding: 5px;
+  border-radius: 3px;
+}
+.card button {
+  margin-top: 20px;
+}
+
+.footer
+{
+  text-align: center;
+  color: gray;
+  font-size: small;
+}
+
+.muted
+{
+  text-align: center;
+  color: gray;
+  font-size: small;
+  ;
+}
+
+h2
+{
+  text-align: center;
+  margin-bottom: 25px;
+}
+.actions
+{
+  text-align: center;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.field input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.homepage .card {
+  text-align: center;
+}
+
+
+.homepage .team {
+  list-style: none;
+  padding: 0;
+  margin: 12px auto 20px;
+}
+
+.homepage .team li {
+  margin: 6px 0;
+}
+
+
+.homepage .actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}
