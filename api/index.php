@@ -1,35 +1,37 @@
-
 <?php
-// Set CORS headers
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
-header('Content-Type: application/json; charset=utf-8');
+// api/index.php
+require __DIR__ . '/response.php';
+require __DIR__ . '/db.php';
 
-// Handle preflight OPTIONS request
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-	http_response_code(200);
-	exit;
-}
-
-require_once __DIR__ . '/db.php';
-
-// Basic routing example
 $method = $_SERVER['REQUEST_METHOD'];
-$path = isset($_GET['path']) ? $_GET['path'] : '';
+$path   = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-switch ($method) {
-	case 'GET':
-		// Example: return API status
-		echo json_encode(['status' => 'API is running']);
-		break;
-	case 'POST':
-		// Example: handle POST request
-		$input = json_decode(file_get_contents('php://input'), true);
-		echo json_encode(['received' => $input]);
-		break;
-	default:
-		http_response_code(405);
-		echo json_encode(['error' => 'Method Not Allowed']);
-		break;
+// If using Apache at /api, set $base = '/api'.
+// If running locally with: php -S 127.0.0.1:8000 -t api api/index.php
+// then keep $base = ''.
+$base = '';
+if ($base && str_starts_with($path, $base)) {
+    $path = substr($path, strlen($base));
 }
+
+/* -------------------- ROUTES -------------------- */
+
+// GET /health → simple API check
+if ($path === '/health' && $method === 'GET') {
+    ok(['status' => 'ok', 'time' => date('c')]);
+}
+
+// GET /dbping → verifies DB connection
+if ($path === '/dbping' && $method === 'GET') {
+    try {
+        $row = db()->query('SELECT NOW() AS now')->fetch();
+        ok(['db' => 'ok', 'time' => $row['now']]);
+    } catch (Throwable $e) {
+        err('DB connection failed', 500, ['details' => $e->getMessage()]);
+    }
+}
+
+// Add more routes here later (e.g. POST /users, POST /login)
+
+// Fallback → 404
+err('Not found', 404);
