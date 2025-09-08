@@ -1,44 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Register Page</title>
-  <link rel="stylesheet" href="assets/styles.css">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Register Page</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
 
-<body>
-<header>
-  <h1>Get started with your account</h1>
-  <p class="muted">
-    Manage your contacts all in one place. Already have an account?
-    <a href="login.html">Login</a>
-  </p>
-</header>
+  <body>
+    <header>
+      <h1>Get started with your account</h1>
+      <p class="muted">
+        Manage your contacts all in one place. Already have an account?
+        <a href="login.html">Login</a>
+      </p>
+    </header>
 
-<main class="container">
-  <section class="card">
-    <h2>Create your account</h2>
+    <main class="container">
+      <section class="card">
+        <h2>Create your account</h2>
 
-    <form method="POST" action="register_api_placeholder.php">
-      <div class="field">
-        <label for="username">Username</label>
-        <input id="username" name="username" type="text" required>
-      </div>
+        <form method="POST" action="index.php">
+          <div class="field">
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" required />
+          </div>
 
-      <div class="field">
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" required>
-      </div>
-      <div class="actions">
-      <button type="submit" class="btn">Register</button>
-      </div>
-    </form>
+          <div class="field">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" required />
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn">Register</button>
+          </div>
+        </form>
+      </section>
+    </main>
 
-  </section>
-</main>
-
-<footer class="footer">© 2025 Team 16 LAMP</footer>
-</body>
-
-
+    <footer class="footer">© 2025 Team 16 LAMP</footer>
+  </body>
 </html>
