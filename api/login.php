@@ -14,14 +14,14 @@
 	}
 	else
 	{
-		$stmt = $conn->prepare("SELECT id,first_name,last_name FROM users WHERE Login=? AND Password =?");
+		$stmt = $conn->prepare("SELECT id,first_name,last_name FROM users WHERE email=? AND password_hashed=?");
 		$stmt->bind_param("ss", $inData["login"], $inData["password"]);
 		$stmt->execute();
 		$result = $stmt->get_result();
 
 		if( $row = $result->fetch_assoc()  )
 		{
-			returnWithInfo( $row['first_name'], $row['last_name'], $row['ID'] );
+			returnWithInfo( $row['first_name'], $row['last_name'], $row['id'] );
 		}
 		else
 		{
