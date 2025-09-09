@@ -4,7 +4,7 @@
 $DB_HOST = 'localhost';       // usually 'localhost'
 $DB_NAME = 'COP4331_lamp_group_16';         // your database name
 $DB_USER = 'group16';    // ask your DB teammate for this
-$DB_PASS = 'COP4331-LAMP-group16';    // ask your DB teammate for this
+$DB_PASS = 'welovegroup16';    // ask your DB teammate for this
 
 function db(): PDO {
     static $pdo = null;
