@@ -13,7 +13,7 @@ CREATE TABLE contacts (
     `user_id` INT NOT NULL DEFAULT '0' ,
     `first_name` VARCHAR(50) NOT NULL DEFAULT '' ,
     `last_name` VARCHAR(50) NOT NULL DEFAULT '' ,
-    `phone` VARCHAR(50) NOT NULL DEFAULT '' ,
+    `phone_number` VARCHAR(50) NOT NULL DEFAULT '' ,
     `email` VARCHAR(50) NOT NULL DEFAULT '' ,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES users(`id`)
