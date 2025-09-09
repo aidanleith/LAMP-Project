@@ -9,7 +9,7 @@
 	$first_name = "";
 	$last_name = "";
 
-	$conn = new mysqli("localhost", "group16", "welovegroup16", "COP4331_lamp_group_16"); 	
+	$conn = new mysqli("localhost", "group16", "COP4331-LAMP-group16", "COP4331_lamp_group_16"); 	
 	if( $conn->connect_error )
 	{
 		returnWithError( $conn->connect_error );
@@ -36,8 +36,8 @@
 	
 	function getRequestInfo()
 	{
-		return json_decode(file_get_contents('php://input'), true);
-	}
+		return $_POST;
+    }
 
 	function sendResultInfoAsJson( $obj )
 	{
