@@ -16,5 +16,5 @@ CREATE TABLE contacts (
     `phone` VARCHAR(50) NOT NULL DEFAULT '' ,
     `email` VARCHAR(50) NOT NULL DEFAULT '' ,
     PRIMARY KEY (`id`),
-    FOREIGN KEY ('userId') REFERENCES users('id')
+    FOREIGN KEY (`user_id`) REFERENCES users(`id`)
     ) ENGINE = InnoDB;
