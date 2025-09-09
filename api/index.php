@@ -1,19 +1,25 @@
 <?php
-// api/index.php
+// api/index.php - Final Version as of Sep 08, 2025
+
+// Show all errors for debugging purposes.
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+// Include the helper files for database and response functions.
 require __DIR__ . '/response.php';
 require __DIR__ . '/db.php';
 
+// --- ROUTING LOGIC ---
 $method = $_SERVER['REQUEST_METHOD'];
 $path   = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// If using Apache at /api, set $base = '/api'.
-// If running locally with: php -S 127.0.0.1:8000 -t api api/index.php
-// then keep $base = ''.
+// FIX: Set the correct base path for your Droplet setup.
 $base = '/contact_manager/api';
 if ($base && str_starts_with($path, $base)) {
     $path = substr($path, strlen($base));
 }
 
+// Helper function to read and validate the incoming JSON body.
 function read_json() {
     $raw = file_get_contents('php://input');
     $data = json_decode($raw, true);
@@ -21,14 +27,15 @@ function read_json() {
     return $data;
 }
 
-/* -------------------- ROUTES -------------------- */
 
-// GET /health → simple API check
+/* -------------------- API ROUTES -------------------- */
+
+// GET /health → A simple check to see if the API is responding.
 if ($path === '/health' && $method === 'GET') {
     ok(['status' => 'ok', 'time' => date('c')]);
 }
 
-// GET /dbping → verifies DB connection
+// GET /dbping → Verifies that the PHP script can connect to the database.
 if ($path === '/dbping' && $method === 'GET') {
     try {
         $row = db()->query('SELECT NOW() AS now')->fetch();
@@ -38,81 +45,80 @@ if ($path === '/dbping' && $method === 'GET') {
     }
 }
 
-/* -------------------- AUTH -------------------- */
+/* -------------------- AUTHENTICATION ROUTES -------------------- */
 
-// POST /users → register (login + password required, names optional)
+// POST /users → Register a new user.
 if ($path === '/users' && $method === 'POST') {
     $in = read_json();
 
-    if (empty($in['login']) || empty($in['password'])) {
-        err('login and password required', 422);
+    // The JSON body must contain 'username' and 'password'.
+    if (empty($in['username']) || empty($in['password'])) {
+        err('username and password required', 422);
     }
 
-    // optional fields (empty string if not provided)
-    $first  = isset($in['firstName']) ? trim((string)$in['firstName']) : '';
-    $last   = isset($in['lastName'])  ? trim((string)$in['lastName'])  : '';
+    // Optional fields (default to empty string if not provided).
+    $first   = isset($in['firstName']) ? trim((string)$in['firstName']) : '';
+    $last    = isset($in['lastName'])  ? trim((string)$in['lastName'])  : '';
 
-    // check for duplicate login
-    $dup = db()->prepare('SELECT 1 FROM users WHERE login = ?');
-    $dup->execute([$in['login']]);
-    if ($dup->fetch()) err('Login already exists', 409);
+    // Check if the username already exists in the database.
+    // FIX: Query uses the correct 'username' column.
+    $dup = db()->prepare('SELECT 1 FROM users WHERE username = ?');
+    $dup->execute([$in['username']]);
+    if ($dup->fetch()) err('Username already exists', 409);
 
+    // Create a secure hash of the user's password.
     $hash = password_hash($in['password'], PASSWORD_DEFAULT);
 
-    // try inserting into password_hashed, else fall back to password
-    try {
-        $stmt = db()->prepare(
-            'INSERT INTO users (firstName, lastName, login, password_hashed)
-             VALUES (?,?,?,?)'
-        );
-        $stmt->execute([$first, $last, $in['login'], $hash]);
-    } catch (Throwable $e) {
-        $stmt = db()->prepare(
-            'INSERT INTO users (firstName, lastName, login, password)
-             VALUES (?,?,?,?)'
-        );
-        $stmt->execute([$first, $last, $in['login'], $hash]);
-    }
+    // Prepare the INSERT statement.
+    // FIX: Column names (first_name, last_name, username, password) now perfectly match your database schema.
+    $stmt = db()->prepare(
+        'INSERT INTO users (first_name, last_name, username, password) VALUES (?,?,?,?)'
+    );
+    $stmt->execute([$first, $last, $in['username'], $hash]);
 
+    // Return a success response with the new user's data.
     ok([
         'id'        => (int)db()->lastInsertId(),
-        'login'     => $in['login'],
+        'username'  => $in['username'],
         'firstName' => $first,
         'lastName'  => $last
-    ], 201);
+    ], 201); // 201 Created status code.
 }
 
-// POST /login → authenticate user
+// POST /login → Authenticate a user and log them in.
 if ($path === '/login' && $method === 'POST') {
     $in = read_json();
-    if (empty($in['login']) || empty($in['password'])) {
-        err('login and password required', 422);
+    if (empty($in['username']) || empty($in['password'])) {
+        err('username and password required', 422);
     }
 
+    // Find the user by their username.
+    // FIX: Query uses the correct column names to match your database schema.
     $stmt = db()->prepare(
-        'SELECT id, firstName, lastName, login, password_hashed, password
-         FROM users WHERE login = ? LIMIT 1'
+        'SELECT id, first_name, last_name, username, password FROM users WHERE username = ? LIMIT 1'
     );
-    $stmt->execute([$in['login']]);
-    $u = $stmt->fetch();
-    if (!$u) err('Invalid credentials', 401);
+    $stmt->execute([$in['username']]);
+    $user = $stmt->fetch();
+    if (!$user) err('Invalid credentials', 401); // Use a generic error for security.
 
-    $stored = $u['password_hashed'] ?: ($u['password'] ?? '');
-    $isHash = password_get_info((string)$stored)['algo'] ? true : false;
+    // Verify the submitted password against the hash stored in the database.
+    if (!password_verify($in['password'], (string)$user['password'])) {
+        err('Invalid credentials', 401);
+    }
 
-    $valid  = $isHash ? password_verify($in['password'], (string)$stored)
-                      : hash_equals((string)$stored, (string)$in['password']);
-
-    if (!$valid) err('Invalid credentials', 401);
-
+    // If successful, return the user's data.
+    // FIX: Uses correct snake_case keys from the database result ($user['first_name'])
+    // and maps them to camelCase keys for the JSON response ('firstName').
     ok([
-        'userId'    => (int)$u['id'],
-        'login'     => $u['login'],
-        'firstName' => $u['firstName'],
-        'lastName'  => $u['lastName']
+        'userId'    => (int)$user['id'],
+        'username'  => $user['username'],
+        'firstName' => $user['first_name'],
+        'lastName'  => $user['last_name']
     ]);
 }
 
-/* -------------------- FALLBACK -------------------- */
 
+/* -------------------- FALLBACK ROUTE -------------------- */
+
+// If no other route was matched, return a 404 Not Found error.
 err('Not found', 404);
