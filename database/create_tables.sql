@@ -1,4 +1,4 @@
---Updated structure of db
+-- Updated structure of db
 CREATE TABLE users (
     `id` INT NOT NULL AUTO_INCREMENT ,
     `first_name` VARCHAR(50) NOT NULL DEFAULT '' ,
