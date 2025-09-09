@@ -1,1 +1,1 @@
-INSERT INTO contacts(user_id, first_name, last_name, email, phone_number) VALUES (1, 'aidanTest', 'leith', 'testing.com', '0000000000')
+INSERT INTO contacts(userId, first_name, last_name, phone, email) VALUES (1, 'aidan', 'leith', 'phoneNumber', 'email')
