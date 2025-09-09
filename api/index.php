@@ -9,7 +9,7 @@ $path   = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 // If using Apache at /api, set $base = '/api'.
 // If running locally with: php -S 127.0.0.1:8000 -t api api/index.php
 // then keep $base = ''.
-$base = '';
+$base = '/contact_manager/api';
 if ($base && str_starts_with($path, $base)) {
     $path = substr($path, strlen($base));
 }
