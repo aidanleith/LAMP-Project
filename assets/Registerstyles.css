@@ -1,0 +1,500 @@
+/* ================= Base ================= */
+* {
+  margin: 0;
+  padding: 0;
+}
+/* Fast, GPU-friendly background */
+:root{
+
+  --site-bg: url("martin-moore-Iv4UZyudMaM-unsplash.jpg");
+}
+
+body{
+  background-color: #efefef;
+  color:#333;
+  font-family: arial, sans-serif;
+}
+
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(0deg, rgba(255,255,255,0.70), rgba(255,255,255,0.70)), /* soft frost */
+    var(--site-bg) center / cover no-repeat;
+  transform: translateZ(0);        /* put on its own layer */
+  will-change: transform;
+}
+
+/*reduced overlay on big screens */
+@media (min-width: 1200px){
+  body::before{
+    background:
+      linear-gradient(0deg, rgba(255,255,255,0.60), rgba(255,255,255,0.60)),
+      var(--site-bg) center / cover no-repeat;
+  }
+}
+
+
+
+.container {
+  margin: 0 auto;
+  width: 600px;
+  padding: 20px;
+}
+@media (max-width: 640px) {
+  .container { width: 92%; }
+}
+
+h1 {
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.fields { margin-bottom: 16px; }
+
+.btn:hover {
+  text-align: center;
+  color: white;
+  background-color: dimgray;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.card button { margin-top: 20px; }
+
+.footer, .muted {
+  text-align: center;
+  color: rgba(0,0,0,.6);
+  font-size: 0.95rem;
+}
+
+.muted a {
+  color: #007aff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.muted a:hover {
+  text-decoration: underline;
+}
+
+.header-text {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+
+
+h2 { text-align: center; margin-bottom: 25px; }
+.actions { text-align: center; }
+
+.field label { display: block; margin-bottom: 5px; }
+
+.homepage .card { text-align: center; }
+.homepage .team { list-style: none; padding: 0; margin: 12px auto 20px; }
+.homepage .team li { margin: 6px 0; }
+.homepage .actions { display: flex; justify-content: center; gap: 12px; margin-top: 10px; }
+
+/* ================= Glass Button ================= */
+@property --angle-1 { syntax: "<angle>"; inherits: false; initial-value: -75deg; }
+@property --angle-2 { syntax: "<angle>"; inherits: false; initial-value: -45deg; }
+
+.glass-btn {
+  --border-width: clamp(1px, 0.0625em, 4px);
+  --anim-time: 400ms;
+  --anim-ease: cubic-bezier(0.25, 1, 0.5, 1);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 0;
+}
+
+
+
+/* ================= Glass form ================= */
+.glass-form { display: grid; gap: 14px; }
+
+.glass-input {
+  width: 80%;
+  max-width: 400px;
+  margin: 0 auto;
+  display: block;
+  border: 1px solid rgba(0,0,0,.12);
+  border-radius: 14px;
+  padding: 8px 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.35));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #222;
+  font: 600 16px/1.2 "Inter", system-ui, sans-serif;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.8),
+    0 6px 18px -10px rgba(0,0,0,.15);
+  transition: box-shadow .15s ease, border-color .15s ease, transform .08s ease;
+}
+.glass-input::placeholder {
+  color: rgba(100,100,100,0.6);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.glass-input:focus {
+  outline: none;
+  border-color: white;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.9),
+    0 0 0 3px dimgrey,
+    0 10px 20px -12px rgba(0,0,0,.22);
+  transform: translateY(1px);
+}
+.glass-input:focus::placeholder { color: rgba(100,100,100,0.35); }
+
+/* ================= Glass card ================= */
+.card.glass-card {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  padding: 14px;
+}
+
+/* ================= Phone shell ================= */
+:root { --phone-w: clamp(260px, 22vw, 380px); }
+
+.phone-stage {
+  perspective: 1200px;
+  display: grid;
+  place-items: center;
+  min-height: 70vh;
+}
+
+.phone {
+  width: var(--phone-w);
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateY(-20deg) rotateX(5deg) scale(0.9);
+  opacity: 0;
+  animation: phoneIn 1s cubic-bezier(.25,1,.4,1) forwards;
+}
+
+.bezel {
+  border-radius: 46px;
+  background: linear-gradient(180deg, #1d1d1f, #2b2b2d);
+  padding: 16px;
+  box-shadow:
+    0 22px 50px -18px rgba(0,0,0,.45),
+    inset 0 0 0 1px rgba(255,255,255,.08);
+  position: relative;
+  overflow: hidden;
+}
+.bezel::after {
+  content:"";
+  position:absolute;
+  inset: 2px 2px auto 2px;
+  height: 26%;
+  border-radius: 44px;
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,0));
+  pointer-events:none;
+}
+
+.notch {
+  position:absolute; top:12px; left:50%; transform:translateX(-50%);
+  width: 118px; height: 30px; border-radius: 18px;
+  background: linear-gradient(180deg, #000, #0c0c0d);
+  box-shadow:
+    0 10px 20px rgba(0,0,0,.28),
+    inset 0 0 0 1px rgba(255,255,255,.06);
+  animation: notchPop 600ms ease forwards;
+}
+/* left sensor */
+.notch::before{
+  content:"";
+  position:absolute;
+  left: 22px; top: 50%; transform: translateY(-50%);
+  width: 6px; height: 6px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, #9aa0a6 0 45%, #222 46% 100%);
+  opacity:.9;
+}
+/* right camera (blue shimmer) */
+.notch::after{
+  content:"";
+  position:absolute;
+  right: 22px; top: 50%; transform: translateY(-50%);
+  width: 8px; height: 8px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #7fd3ff 0 40%, #0a2130 41% 100%);
+  box-shadow: 0 0 2px #7fd3ff80;
+}
+
+
+
+.screen {
+  position: relative;
+  border-radius: 38px;
+  background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.10));
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,.12),
+    inset 0 14px 28px rgba(0,0,0,.06),
+    inset 0 -18px 26px rgba(0,0,0,.05);
+  overflow: hidden;
+
+  width: 100%;
+  aspect-ratio: 9 / 16.5;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  /* leave space for status bar under the island */
+  margin-top: 24px;
+  height: calc(100% - 24px);
+  padding-top: 58px;
+}
+
+.auth-form { width: 75%; display: grid; gap: 10px; }
+.auth-form .glass-input { width: 100%; }
+.auth-form .actions.glass-btn { margin-top: 8px; padding: 6px 0; }
+
+.shadow-blob {
+  position:absolute; inset:auto 0 -26px 0; height:28px; border-radius:50%;
+  background: radial-gradient(closest-side, rgba(0,0,0,.25), transparent 70%);
+  transform: translateZ(-1px);
+}
+
+.screen-title{
+  font-size: 1.55rem;
+  font-weight: 600;
+  letter-spacing: .2px;
+  text-align: center;
+  color: whitesmoke;
+  text-shadow: 0 1px 2px rgba(0,0,0,.25), 0 0 6px rgba(255,255,255,.25);
+  position: relative;
+  top: -50px;
+  margin-bottom: 10px;
+}
+.screen-title::after{
+  content:"";
+  display:block;
+  width: 56%;
+  height: 1px;
+  margin: 8px auto 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+  filter: blur(.2px);
+  opacity: .7;
+}
+
+/* animations */
+@keyframes phoneIn { to { transform: rotateY(0) rotateX(0) scale(1); opacity: 1; } }
+@keyframes notchPop {
+  0% { transform: translateX(-50%) scale(.7); opacity: 0; }
+  60% { transform: translateX(-50%) scale(1.1); opacity: 1; }
+  100% { transform: translateX(-50%) scale(1); }
+}
+@media (prefers-reduced-motion: reduce){
+  .phone{ animation: none; transform: none; opacity: 1; }
+  .notch{ animation: none; }
+}
+
+/* ================= Status bar ================= */
+.status-bar {
+  position: absolute;
+  top: 14px; /* moved slightly up (was 16px) */
+  left: 0; right: 0;
+  padding: 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: .82rem;
+  font-weight: 500;
+  letter-spacing: .2px;
+  color: rgba(255,255,255,.9);
+  text-shadow: 0 1px 2px rgba(0,0,0,.35);
+}
+
+.status-bar .status-icons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.battery {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  position: relative;
+  top: -1px;
+}
+
+.battery span {
+  font-size: 0.8rem;
+  line-height: 1;
+  position: relative;
+  top: 1px;
+}
+
+/* iOS style battery icon */
+.battery-icon {
+  width: 22px;
+  height: 11px;
+  border: 1.5px solid rgba(255,255,255,.9);
+  border-radius: 3px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* fill level */
+.battery-icon::before {
+  content: "";
+  position: absolute;
+  top: 2px; left: 2px;
+  height: 5px;
+  width: 15px;
+  background: rgba(255,255,255,.9);
+  border-radius: 1px;
+}
+
+.battery-icon::after {
+  content: "";
+  position: absolute;
+  right: -3px;
+  top: 3px;
+  width: 2px;
+  height: 5px;
+  border-radius: 1px;
+  background: rgba(255,255,255,.9);
+}
+
+
+/* ================= Home indicator ================= */
+.home-indicator{
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  width: 110px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.9);
+  box-shadow: 0 1px 0 rgba(0,0,0,.25) inset, 0 6px 14px rgba(0,0,0,.25);
+  opacity: 0;
+  pointer-events: none;
+  animation: homeFadeIn 1s ease-out forwards;
+}
+@keyframes homeFadeIn { to { opacity: .95; } }
+
+
+.user-icon {
+  width: 70px;
+  height: 70px;
+  position: absolute;       /* take it out of the normal flow */
+  top: 120px;                /* adjust this value to move it down/up */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.9;
+}
+/* === Slide to Register (iOS-like) === */
+.slide-cta{
+  position: absolute;
+  left: 50%;
+  bottom: 56px;                 /* sits above your home indicator */
+  transform: translateX(-50%);
+  width: min(84%, 360px);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  z-index: 5;
+}
+
+.slide-track{
+  position: relative;
+  height: 54px;
+  border-radius: 999px;
+  padding: 4px;
+  background: linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,.08));
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.35),
+    inset 0 -8px 18px rgba(0,0,0,.25),
+    0 10px 24px rgba(0,0,0,.25);
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+  overflow: hidden;
+}
+
+.slide-label{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  font: 600 1rem/1 system-ui, -apple-system, "Inter", sans-serif;
+  color: rgba(0,0,0,.85);
+  text-shadow: 0 1px 0 rgba(255,255,255,.75);
+  pointer-events: none;
+  white-space: nowrap;
+  opacity: .95;
+}
+
+.slide-handle{
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  height: calc(100% - 8px);
+  aspect-ratio: 1 / 1;
+  border-radius: 999px;
+  background: white;
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.9);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.slide-handle .power{
+  font-size: 1.2rem;
+  color: #d9382e;
+  filter: drop-shadow(0 1px 0 rgba(255,255,255,.6));
+}
+
+/* Progress shimmer */
+.slide-track::after{
+  content:"";
+  position:absolute; inset:0;
+  background: linear-gradient(90deg,
+  transparent 0%,
+  rgba(255,255,255,.35) 40%,
+  transparent 80%);
+  mix-blend-mode: screen;
+  background-size: 300% 100%;
+  animation: shimmer 5s linear infinite;
+  pointer-events: none;
+}
+@keyframes shimmer{ to{ background-position: -200% 0; } }
+
+/* error ring on empty fields */
+.field-error {
+  border-color: #ff6b6b !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.9),
+    0 0 0 3px #ff6b6b33,
+    0 10px 20px -12px rgba(0,0,0,.22) !important;
+}
+
+/* shake animation for the track when validation fails */
+@keyframes shakeX {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+.slide-track.shake {
+  animation: shakeX 300ms ease;
+}
+

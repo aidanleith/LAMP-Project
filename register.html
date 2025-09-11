@@ -1,52 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Register Page</title>
-    <link rel="stylesheet" href="assets/styles.css" />
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <title>Register Page</title>
+  <link rel="stylesheet" href="assets/Registerstyles.css">
+</head>
 
-  <body>
-    <header>
-      <h1>Get started with your account</h1>
-      <p class="muted">
-        Manage your contacts all in one place. Already have an account?
-        <a href="login.html">Login</a>
-      </p>
-    </header>
+<body>
+<header>
+  <h1>Get started with your account</h1>
+  <p class="muted">
+    Manage your contacts all in one place. Already have an account?
+    <a href="login.html">Login</a>
+  </p>
+</header>
 
-    <main class="container">
-      <section class="card">
-        <h2>Create your account</h2>
+<main class="container">
+  <section class="glass-card">
 
-        <form method="POST" action="api/register.php">
+    <!-- Phone wrapper -->
+    <div class="phone-stage">
+      <div class="phone">
+        <div class="bezel">
+          <div class="notch"></div>
 
-          <div class="field">
-            <label for="first_name">First Name</label>
-            <input id="first_name" name="first_name" type="text" required />
+          <!-- Screen holds our form -->
+          <div class="screen">
+            <div class="home-indicator" aria-hidden="true"></div>
+            <!-- Status bar -->
+            <div class="status-bar">
+              <span id="phone-time" class="time">⏻ 9:41</span>
+              <div class="status-icons">
+                <div class="status-icons">
+                  <span>ᯤ 5G</span>
+                  <div class="battery">
+                    <span>100%</span>
+                    <div class="battery-icon"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <img src="assets/contact-man.png" alt="User Icon" class="user-icon">
+
+            <h2 class="screen-title">Create your account</h2>
+            <form method="POST" action="api/register.php" class="auth-form">
+              <div class="field">
+                <input id="username" name="username" type="text"
+                       class="glass-input" placeholder="Username" required>
+              </div>
+
+              <div class="field">
+                <input id="password" name="password" type="password"
+                       class="glass-input" placeholder="Password" required>
+              </div>
+
+              <!-- Slide to Register -->
+              <div class="slide-cta" aria-label="Slide to register">
+                <div class="slide-track">
+                  <div class="slide-handle" aria-hidden="true">
+                    <!-- power icon (optional): -->
+                    <span class="power">⏻</span>
+                  </div>
+                  <span class="slide-label">Slide to register</span>
+                </div>
+              </div>
+
+
+
+            </form>
           </div>
+        </div>
 
-          <div class="field">
-            <label for="last_name">Last Name</label>
-            <input id="last_name" name="last_name" type="text" required />
-          </div>
+        <div class="shadow-blob"></div>
+      </div>
+    </div>
 
-          <div class="field">
-            <label for="username">Username</label>
-            <input id="username" name="username" type="text" required />
-          </div>
 
-          <div class="field">
-            <label for="password">Password</label>
-            <input id="password" name="password" type="password" required />
-          </div>
-          <div class="actions">
-            <button type="submit" class="btn">Register</button>
-          </div>
-        </form>
-      </section>
-    </main>
+  </section>
+</main>
 
-    <footer class="footer">© 2025 Team 16 LAMP</footer>
-  </body>
+<footer class="footer">© 2025 Team 16 LAMP</footer>
+
+<!-- JavaScript for using real time on phone bar -->
+<script>
+  function updatePhoneTime() {
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    hours = hours % 12;
+    hours = hours ? hours : 12; // 0 becomes 12
+
+    const timeString = `${hours}:${minutes} ${ampm}`;
+    document.getElementById('phone-time').textContent = timeString;
+  }
+
+  updatePhoneTime();                 // run once on load
+  setInterval(updatePhoneTime, 60000); // update every minute
+</script>
+
+<script>
+  (() => {
+    const form   = document.querySelector('form.auth-form');
+    const track  = document.querySelector('.slide-track');
+    const handle = document.querySelector('.slide-handle');
+    const label  = document.querySelector('.slide-label');
+
+    if (!form || !track || !handle) return;
+
+    let dragging = false;
+    let startX   = 0;
+    let minX     = 4; // padding-left of track
+    let maxX;        // computed from width
+    const THRESHOLD = 0.88; // how far to trigger submit
+
+    function setBounds(){
+      const rect = track.getBoundingClientRect();
+      const hRect = handle.getBoundingClientRect();
+      maxX = rect.width - hRect.width - 4; // track padding-right
+    }
+    setBounds();
+    window.addEventListener('resize', setBounds);
+
+    function setPos(px){
+      const x = Math.max(minX, Math.min(px, maxX));
+      handle.style.left = `${x}px`;
+      // fade label as you slide
+      const progress = (x - minX) / (maxX - minX);
+      label.style.opacity = String(1 - progress * 0.85);
+    }
+
+    function startDrag(e){
+      dragging = true;
+      startX = (e.touches ? e.touches[0].clientX : e.clientX) - handle.offsetLeft;
+      document.addEventListener('pointermove', onMove);
+      document.addEventListener('pointerup', endDrag, { once:true });
+
+      // also support touch events (Safari)
+      document.addEventListener('touchmove', onMove, { passive:false });
+      document.addEventListener('touchend', endDrag, { once:true });
+    }
+
+    function onMove(e){
+      if (!dragging) return;
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      setPos(clientX - startX);
+      e.preventDefault();
+    }
+
+    function endDrag(){
+      dragging = false;
+      const x = parseFloat(handle.style.left || '0');
+      const progress = (x - minX) / (maxX - minX);
+
+      if (progress >= THRESHOLD){
+        // lock to end, submit
+        setPos(maxX);
+        label.textContent = 'Registering…';
+        handle.style.pointerEvents = 'none';
+        // submit the form
+        if (form.requestSubmit) form.requestSubmit();
+        else form.submit();
+      } else {
+        // animate back
+        handle.style.transition = 'left 240ms ease';
+        label.style.transition = 'opacity 240ms ease';
+        setPos(minX);
+        setTimeout(() => {
+          handle.style.transition = '';
+          label.style.transition = '';
+        }, 260);
+      }
+
+      document.removeEventListener('pointermove', onMove);
+      document.removeEventListener('touchmove', onMove);
+    }
+
+    // Use Pointer Events if supported
+    handle.addEventListener('pointerdown', startDrag);
+    // Fallback for iOS Safari (sometimes needs touchstart)
+    handle.addEventListener('touchstart', startDrag, { passive:true });
+
+    // Keyboard fallback for accessibility
+    handle.setAttribute('tabindex', '0');
+    handle.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        if (form.requestSubmit) form.requestSubmit();
+        else form.submit();
+      }
+    });
+
+    function endDrag(){
+      dragging = false;
+      const x = parseFloat(handle.style.left || '0');
+      const progress = (x - minX) / (maxX - minX);
+
+      // helpers
+      const username = form.querySelector('#username');
+      const password = form.querySelector('#password');
+      const filled = username.value.trim().length > 0 && password.value.trim().length > 0;
+
+      // remove previous error ring when user types again
+      function clearErrorsOnInput(el){
+        const handler = () => { el.classList.remove('field-error'); el.removeEventListener('input', handler); };
+        el.addEventListener('input', handler);
+      }
+
+      if (progress >= THRESHOLD) {
+        if (filled) {
+          // success: lock to end, submit
+          setPos(maxX);
+          label.textContent = 'Registering…';
+          handle.style.pointerEvents = 'none';
+          if (form.requestSubmit) form.requestSubmit();
+          else form.submit();
+        } else {
+
+          // invalid: shake + snap back + highlight empties
+          track.classList.add('shake');
+          setTimeout(() => track.classList.remove('shake'), 320);
+
+          if (!username.value.trim()) username.classList.add('field-error');
+          if (!password.value.trim()) password.classList.add('field-error');
+          clearErrorsOnInput(username);
+          clearErrorsOnInput(password);
+
+          // snap back
+          handle.style.transition = 'left 240ms ease';
+          label.style.transition = 'opacity 240ms ease';
+          label.textContent = 'Slide to register';
+          setPos(minX);
+          setTimeout(() => {
+            handle.style.transition = '';
+            label.style.transition = '';
+          }, 260);
+        }
+      } else {
+        // not far enough: just return to start
+        handle.style.transition = 'left 240ms ease';
+        label.style.transition = 'opacity 240ms ease';
+        setPos(minX);
+        setTimeout(() => {
+          handle.style.transition = '';
+          label.style.transition = '';
+        }, 260);
+      }
+
+      document.removeEventListener('pointermove', onMove);
+      document.removeEventListener('touchmove', onMove);
+    }
+
+  })();
+</script>
+
+
+
+</body>
+
+
 </html>

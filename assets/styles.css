@@ -36,10 +36,10 @@ h1
   font-size: 32px;
   font-weight: bold;
 }
- .fields
- {
-   margin-bottom: 16px;
- }
+.fields
+{
+  margin-bottom: 16px;
+}
 
 .btn:hover
 {
@@ -65,7 +65,7 @@ h1
   text-align: center;
   color: gray;
   font-size: small;
-  ;
+;
 }
 
 h2
