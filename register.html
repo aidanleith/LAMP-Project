@@ -180,7 +180,6 @@
 
     // Use Pointer Events if supported
     handle.addEventListener('pointerdown', startDrag);
-    // Fallback for iOS Safari (sometimes needs touchstart)
     handle.addEventListener('touchstart', startDrag, { passive:true });
 
     // Keyboard fallback for accessibility
