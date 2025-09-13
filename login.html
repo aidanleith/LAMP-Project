@@ -1,46 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Login Page</title>
-  <link rel="stylesheet" href="assets/styles.css">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login Page</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
 
-<body>
+  <body>
+    <h1>Welcome back</h1>
+    <p class="muted">
+      Sign in to your account below. <br />
+      do hvee and account <a href="register.html">Sign up here</a>
+    </p>
+    <main class="container">
+      <section class="card">
+        <h2>Sign in to your account</h2>
 
-<h1>Welcome back</h1>
-<p class="muted">
-  Sign in to your account below. <br>
-  Don’t have an account? <a href="register.html">Sign up here</a>
-</p>
-<main class="container">
-  <section class="card">
-    <h2>Sign in to your account</h2>
+        <form method="POST" action="api/login.php">
+          <div class="field">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" required />
+          </div>
 
-    <form method="POST" action="api/login.php">
-      <div class="field">
-        <label for="username">Username</label>
-        <input type="text" name="username" id="username" required>
-      </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required />
+          </div>
 
-      <div class="field">
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" required>
-      </div>
+          <div class="actions glass-btn">
+            <div class="button-wrap">
+              <button type="submit">
+                <span>Login</span>
+              </button>
+              <div class="button-shadow"></div>
+            </div>
+          </div>
+        </form>
+      </section>
+    </main>
 
-      <div class="actions glass-btn">
-        <div class="button-wrap">
-          <button type="submit">
-            <span>Login</span>
-          </button>
-          <div class="button-shadow"></div>
-        </div>
-      </div>
-    </form>
-  </section>
-</main>
-
-<footer class="footer">© 2025 Team 16 LAMP</footer>
-</body>
+    <footer class="footer">© 2025 Team 16 LAMP</footer>
+  </body>
 </html>
-
