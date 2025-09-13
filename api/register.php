@@ -1,6 +1,8 @@
 <?php
 
-    ini_set('display_errors', 1);
+	$conn = new mysqli("localhost", "group16", "welovegroup16", "COP4331_lamp_group_16"); 	
+
+	ini_set('display_errors', 1);
     error_reporting(E_ALL);
 	$inData = getRequestInfo();
 	
@@ -8,15 +10,15 @@
 	$first_name = "";
 	$last_name = "";
 
-	$conn = new mysqli("localhost", "group16", "welovegroup16", "COP4331_lamp_group_16"); 	
+	
 	if( $conn->connect_error )
 	{
 		returnWithError( $conn->connect_error );
 	}
 	else
 	{
-		$stmt = $conn->prepare("INSERT INTO users (first_name,last_name,username,`password`) VALUES(?,?,?,?)");
-		$stmt->bind_param("ssss", $inData["first_name"], $inData["last_name"], $inData["username"], $inData["password"]);
+		$stmt = $conn->prepare("INSERT INTO users (first_name,last_name,email,`password`) VALUES(?,?,?,?)");
+		$stmt->bind_param("ssss", $inData["first_name"], $inData["last_name"], $inData["email"], $inData["password"]);
 		if ($stmt->execute()) {
             echo "User inserted successfully";
         } else {
