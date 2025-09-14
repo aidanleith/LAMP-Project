@@ -10,15 +10,15 @@
 	$first_name = "";
 	$last_name = "";
 
-	
+
 	if( $conn->connect_error )
 	{
 		returnWithError( $conn->connect_error );
 	}
 	else
 	{
-		$stmt = $conn->prepare("INSERT INTO users (first_name,last_name,email,`password`) VALUES(?,?,?,?)");
-		$stmt->bind_param("ssss", $inData["first_name"], $inData["last_name"], $inData["email"], $inData["password"]);
+		$stmt = $conn->prepare("INSERT INTO users (first_name,last_name,username,`password`) VALUES(?,?,?,?)");
+		$stmt->bind_param("ssss", $inData["first_name"], $inData["last_name"], $inData["username"], $inData["password"]);
 		if ($stmt->execute()) {
             echo "User inserted successfully";
         } else {
