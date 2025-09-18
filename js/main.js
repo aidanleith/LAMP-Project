@@ -22,6 +22,7 @@ function login()
 
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
+    console.log('after POST request')
 	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
 	try
 	{
@@ -33,13 +34,15 @@ function login()
 				userId = jsonObject.id;
 		
 				if( userId < 1 )
-				{		
+				{	
+                    console.log('id less than 1')
 					//document.getElementById("loginResult").innerHTML = "User/Password combination incorrect";
 					return;
 				}
 		
 				firstName = jsonObject.firstName;
 				lastName = jsonObject.lastName;
+                console.log('didnt hit error')
 
 				saveCookie();
 	
