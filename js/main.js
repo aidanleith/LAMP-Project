@@ -35,7 +35,7 @@ function login()
 		
 				if( userId < 1 )
 				{	
-                    console.log('id less than 1')
+                    console.log(userId)
 					//document.getElementById("loginResult").innerHTML = "User/Password combination incorrect";
 					return;
 				}
