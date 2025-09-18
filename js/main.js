@@ -2,6 +2,7 @@ let userId = 0;
 let firstName = "";
 let lastName = "";
 
+//login functionality
 function login()
 {
 	userId = 0;
@@ -22,7 +23,6 @@ function login()
 
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
-    console.log('after POST request')
 	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
 	try
 	{
@@ -37,13 +37,11 @@ function login()
 				if( userId < 1 )
 				{	
                     console.log(userId)
-					//document.getElementById("loginResult").innerHTML = "User/Password combination incorrect";
 					return;
 				}
 		
 				firstName = jsonObject.first_name;
 				lastName = jsonObject.last_name;
-                console.log('didnt hit error')
 
 				saveCookie();
 	
@@ -60,6 +58,7 @@ function login()
 
 }
 
+
 function saveCookie()
 {
 	let minutes = 20;
@@ -67,6 +66,7 @@ function saveCookie()
 	date.setTime(date.getTime()+(minutes*60*1000));	
 	document.cookie = "firstName=" + firstName + ",lastName=" + lastName + ",userId=" + userId + ";expires=" + date.toGMTString();
 }
+
 
 function readCookie()
 {
@@ -101,7 +101,8 @@ function readCookie()
 	}
 }
 
-function doLogout()
+//logout
+function logout()
 {
 	userId = 0;
 	firstName = "";
@@ -110,34 +111,42 @@ function doLogout()
 	window.location.href = "index.html";
 }
 
+//add color function 
 function addColor()
 {
-	let newColor = document.getElementById("colorText").value;
-	document.getElementById("colorAddResult").innerHTML = "";
+	let button = document.querySelector("#add-color-button")
+	button.addEventListener("click", async()=> {
+		const data = {
+			firstName: document.querySelector('#firstName').value,
+			lastName: document.querySelector('#lastName').value,
+			phoneNumber: document.querySelector('#phoneNumber').value,
+			email: document.querySelector('#email').value,
+			userId
+		}
+		let jsonPayload = JSON.stringify(data)
 
-	let tmp = {color:newColor,userId,userId};
-	let jsonPayload = JSON.stringify( tmp );
-
-	let url = urlBase + '/AddColor.' + extension;
+		let url = 'api/addContact.php';
 	
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
+		let xhr = new XMLHttpRequest();
+		xhr.open("POST", url, true);
+		xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+		try
 		{
-			if (this.readyState == 4 && this.status == 200) 
+			xhr.onreadystatechange = function() 
 			{
-				document.getElementById("colorAddResult").innerHTML = "Color has been added";
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-		document.getElementById("colorAddResult").innerHTML = err.message;
-	}
+				if (this.readyState == 4 && this.status == 200) 
+				{
+					console.log(`Contact added`)
+				}
+			};
+			xhr.send(jsonPayload);
+		}
+		catch(err)
+		{
+			console.log(err.message);
+		}
+
+	})
 	
 }
 
