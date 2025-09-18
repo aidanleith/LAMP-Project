@@ -18,7 +18,7 @@ function login()
 //	var tmp = {login:login,password:hash};
 	let jsonPayload = JSON.stringify( tmp );
 	
-	let url = '/api/login.php';
+	let url = 'api/login.php';
 
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
