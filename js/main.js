@@ -126,6 +126,7 @@ function addColor()
 		let jsonPayload = JSON.stringify(data)
 
 		let url = 'api/addContact.php';
+		console.log('event listener works')
 	
 		let xhr = new XMLHttpRequest();
 		xhr.open("POST", url, true);
