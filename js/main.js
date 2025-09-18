@@ -31,6 +31,7 @@ function login()
 			if (this.readyState == 4 && this.status == 200) 
 			{
 				let jsonObject = JSON.parse( xhr.responseText );
+                console.log(jsonObject)
 				userId = jsonObject.id;
 		
 				if( userId < 1 )
@@ -40,8 +41,8 @@ function login()
 					return;
 				}
 		
-				firstName = jsonObject.firstName;
-				lastName = jsonObject.lastName;
+				firstName = jsonObject.first_name;
+				lastName = jsonObject.last_name;
                 console.log('didnt hit error')
 
 				saveCookie();
