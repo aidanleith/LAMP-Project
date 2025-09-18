@@ -1,54 +1,42 @@
 <?php
-// addContact.php
+	$data = getRequestInfo();
+	
+	$firstName = $data['firstName'];
+    $lastName = $data['lastName'];
+    $phone = $data['phoneNumber'];
+    $email = $data['email'];
+    $id = $data['userId'];
 
-header('Content-Type: application/json');
+	$conn = new mysqli("localhost", "group16", "welovegroup16", "COP4331_lamp_group_16");
+	if ($conn->connect_error) 
+	{
+		returnWithError( $conn->connect_error );
+	} 
+	else
+	{
+		$stmt = $conn->prepare("INSERT into contacts (userId,first_name, last_name, email, phone_number) VALUES(?,?, ?,?,?)");
+		$stmt->bind_param("issss", $id, $firstName, $lastName, $email, $phone);
+		$stmt->execute();
+		$stmt->close();
+		$conn->close();
+		returnWithError("");
+	}
 
-// Database connection settings
-$conn = new mysqli("localhost", "group16", "welovegroup16", "COP4331_lamp_group_16"); 	
+	function getRequestInfo()
+	{
+		return json_decode(file_get_contents('php://input'), true);
+	}
 
-
-// Get POST data
-$data = json_decode(file_get_contents('php://input'), true);
-
-
-if (
-    !isset($data['firstName']) ||
-    !isset($data['lastName']) ||
-    !isset($data['phoneNumber']) ||
-    !isset($data['email']) 
-) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Missing required fields']);
-    exit;
-}
-
-// Connects the name to the database
-$first_name = trim($data['firstName']);
-$last_name = trim($data['lastName']);
-$phone_number = trim($data['phoneNumber']);
-$email = trim($data['email']);
-$user_id = $data['userId'];
-
-try {
-
-    //Create a new PDO connect
-    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    $stmt = $pdo->prepare(
-        "INSERT INTO contacts (first_name, last_name, phone_number, email, user_id) VALUES (:first_name, :last_name, :phone_number, :email, :user_id)"
-    );
-    $stmt->execute([
-        ':first_name'   => $first_name,
-        ':last_name'    => $last_name,
-        ':phone_number' => $phone_number,
-        ':email'        => $email,
-        ':user_id'      => $user_id
-    ]);
-
-    echo json_encode(['success' => true, 'id' => $pdo->lastInsertId()]);
-} catch (PDOException $e) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Database error']);
-}
+	function sendResultInfoAsJson( $obj )
+	{
+		header('Content-type: application/json');
+		echo $obj;
+	}
+	
+	function returnWithError( $err )
+	{
+		$retValue = '{"error":"' . $err . '"}';
+		sendResultInfoAsJson( $retValue );
+	}
+	
 ?>
