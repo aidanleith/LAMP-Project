@@ -111,43 +111,44 @@ function logout()
 	window.location.href = "index.html";
 }
 
+let button = document.querySelector("#add-color-button")
+button.addEventListener("click", async()=> {
+	addColor();
+})
+
 //add color function 
 function addColor()
 {
-	let button = document.querySelector("#add-color-button")
-	button.addEventListener("click", async()=> {
-		const data = {
-			firstName: document.querySelector('#firstName').value,
-			lastName: document.querySelector('#lastName').value,
-			phoneNumber: document.querySelector('#phoneNumber').value,
-			email: document.querySelector('#email').value,
-			userId
-		}
-		let jsonPayload = JSON.stringify(data)
+	const data = {
+		firstName: document.querySelector('#firstName').value,
+		lastName: document.querySelector('#lastName').value,
+		phoneNumber: document.querySelector('#phoneNumber').value,
+		email: document.querySelector('#email').value,
+		userId
+	}
+	let jsonPayload = JSON.stringify(data)
 
-		let url = 'api/addContact.php';
-		console.log('event listener works')
-	
-		let xhr = new XMLHttpRequest();
-		xhr.open("POST", url, true);
-		xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-		try
+	let url = 'api/addContact.php';
+	console.log('event listener works')
+
+	let xhr = new XMLHttpRequest();
+	xhr.open("POST", url, true);
+	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+	try
+	{
+		xhr.onreadystatechange = function() 
 		{
-			xhr.onreadystatechange = function() 
+			if (this.readyState == 4 && this.status == 200) 
 			{
-				if (this.readyState == 4 && this.status == 200) 
-				{
-					console.log(`Contact added`)
-				}
-			};
-			xhr.send(jsonPayload);
-		}
-		catch(err)
-		{
-			console.log(err.message);
-		}
-
-	})
+				console.log(`Contact added`)
+			}
+		};
+		xhr.send(jsonPayload);
+	}
+	catch(err)
+	{
+		console.log(err.message);
+	}
 	
 }
 
