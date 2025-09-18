@@ -27,6 +27,7 @@ $first_name = trim($data['firstName']);
 $last_name = trim($data['lastName']);
 $phone_number = trim($data['phoneNumber']);
 $email = trim($data['email']);
+$user_id = $data['userId'];
 
 try {
 
@@ -35,13 +36,14 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $stmt = $pdo->prepare(
-        "INSERT INTO contacts (first_name, last_name, phone_number, email) VALUES (:first_name, :last_name, :phone_number, :email)"
+        "INSERT INTO contacts (first_name, last_name, phone_number, email, user_id) VALUES (:first_name, :last_name, :phone_number, :email, :user_id)"
     );
     $stmt->execute([
         ':first_name'   => $first_name,
         ':last_name'    => $last_name,
         ':phone_number' => $phone_number,
-        ':email'        => $email
+        ':email'        => $email,
+        ':user_id'      => $user_id
     ]);
 
     echo json_encode(['success' => true, 'id' => $pdo->lastInsertId()]);
