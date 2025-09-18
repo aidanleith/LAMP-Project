@@ -119,80 +119,54 @@ button.addEventListener("click", async()=> {
 //add color function 
 function addColor()
 {
-	const data = {
-		firstName: document.querySelector('#firstName').value,
-		lastName: document.querySelector('#lastName').value,
-		phoneNumber: document.querySelector('#phoneNumber').value,
-		email: document.querySelector('#email').value,
-		userId
-	}
-	let jsonPayload = JSON.stringify(data)
+	console.log("addColor function called");
+    console.log("userId:", userId); 
+    
+    const data = {
+        firstName: document.querySelector('#firstName').value,
+        lastName: document.querySelector('#lastName').value,
+        phoneNumber: document.querySelector('#phoneNumber').value,
+        email: document.querySelector('#email').value,
+        userId
+    };
+    
+    console.log("Data to send:", data);
+    
+    let jsonPayload = JSON.stringify(data);
+    let url = 'api/addContact.php';
+    console.log('Making API call to:', url);
 
-	let url = 'api/addContact.php';
-	console.log('event listener works')
-
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				console.log(`Contact added`)
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-		console.log(err.message);
-	}
-	
-}
-
-function searchColor()
-{
-	let srch = document.getElementById("searchText").value;
-	document.getElementById("colorSearchResult").innerHTML = "";
-	
-	let colorList = "";
-
-	let tmp = {search:srch,userId:userId};
-	let jsonPayload = JSON.stringify( tmp );
-
-	let url = urlBase + '/SearchColors.' + extension;
-	
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				document.getElementById("colorSearchResult").innerHTML = "Color(s) has been retrieved";
-				let jsonObject = JSON.parse( xhr.responseText );
-				
-				for( let i=0; i<jsonObject.results.length; i++ )
-				{
-					colorList += jsonObject.results[i];
-					if( i < jsonObject.results.length - 1 )
-					{
-						colorList += "<br />\r\n";
-					}
-				}
-				
-				document.getElementsByTagName("p")[0].innerHTML = colorList;
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-		document.getElementById("colorSearchResult").innerHTML = err.message;
-	}
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    
+    try {
+        xhr.onreadystatechange = function() {
+            console.log("ReadyState:", this.readyState, "Status:", this.status);
+            
+            if (this.readyState == 4) {
+                console.log("Response received:", xhr.responseText);
+                
+                if (this.status == 200) {
+                    try {
+                        let response = JSON.parse(xhr.responseText);
+                        if (response.success) {
+                            console.log('Contact added successfully! ID:', response.id);
+                        } else if (response.error) {
+                            console.log('Server error:', response.error);
+                        }
+                    } catch (e) {
+                        console.log('Error parsing response:', e);
+                    }
+                } else {
+                    console.log('HTTP Error - Status:', this.status);
+                }
+            }
+        };
+        xhr.send(jsonPayload);
+    }
+    catch(err) {
+        console.log("XHR Error:", err.message);
+    }
 	
 }
