@@ -113,6 +113,7 @@ function logout()
 
 let button = document.querySelector("#add-color-button")
 button.addEventListener("click", async()=> {
+	readCookie();
 	addColor();
 })
 
