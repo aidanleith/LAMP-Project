@@ -111,16 +111,15 @@ function logout()
 	window.location.href = "index.html";
 }
 
-let button = document.querySelector("#add-color-button")
+let button = document.querySelector("#add-contact-button")
 button.addEventListener("click", async()=> {
 	readCookie();
-	addColor();
+	addContact();
 })
 
-//add color function 
-function addColor()
+//add contact function 
+function addContact()
 {
-	console.log("addColor function called");
     console.log("userId:", userId); 
     
     const data = {
