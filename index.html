@@ -1,41 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset ="UTF-8">
-  <title>LAMP Stack Project</title>
-  <link rel="stylesheet" href="assets/Registerstyles.css">
+    <meta charset="UTF-8" />
+    <title>LAMP Stack Project • Team 16</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="assets/index.css" />
 </head>
-
-<body>
-
-<header>
-  <h1> LAMP Stack Project</h1>
+<body class="landing">
+<header class="site-header">
+    <h1 class="site-title">LAMP Stack Project</h1>
+    <p class="site-sub">Welcome to our Team 16 demo app</p>
 </header>
 
+<main class="container">
+    <section class="hero-card">
+        <div class="hero-left">
+            <h2>Welcome 👋</h2>
+            <p class="lead">
+                A simple contacts app with a polished, accessible UI.
+                Use <strong>Register</strong> to create an account or <strong>Login</strong> to continue.
+            </p>
 
-<main class="container homepage">
-  <section class="card">
-  <h2>
-    Welcome to our LAMP Stack Project!
-  </h2>
-  <p> Our group members are: </p>
-  <ul class = "team">
-    <li> Alanys Mercado in Front-end </li>
-    <li> Miraziz Akmalov in API </li>
-    <li> Jaime Sepulveda in API</li>
-    <li> Aidan Leith in Database</li>
-    <li> Md Sahif Hossain as Project Manager</li>
-  </ul>
+            <div class="cta-row">
+                <a class="btn primary" href="register.html">Create account</a>
+                <a class="btn" href="login.html">Login</a>
+            </div>
+        </div>
 
-  <div class ="actions">
-    <a href="register.html"><button>Register</button></a>
-    <a href="login.html"><button>Login</button></a>
-  </div>
-
-  </section>
+        <div class="hero-right">
+            <h3 class="muted">Team 16</h3>
+            <ul class="team">
+                <li><span class="avatar">AM</span> <strong>Alanys Mercado</strong> <span class="pill">Front-end</span></li>
+                <li><span class="avatar">MA</span> <strong>Miraziz Akmalov</strong> <span class="pill">API</span></li>
+                <li><span class="avatar">JS</span> <strong>Jaime Sepulveda</strong> <span class="pill">API</span></li>
+                <li><span class="avatar">AL</span> <strong>Aidan Leith</strong> <span class="pill">Database</span></li>
+                <li><span class="avatar">SH</span> <strong>Md Sahif Hossain</strong> <span class="pill">PM</span></li>
+            </ul>
+        </div>
+    </section>
 </main>
+
 <footer class="footer">© 2025 Team 16 LAMP</footer>
 </body>
-
 </html>
