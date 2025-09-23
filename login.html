@@ -1,46 +1,468 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
+<head>
+    <meta charset="UTF-8">
     <title>Login Page</title>
-    <link rel="stylesheet" href="assets/styles.css" />
-  </head>
 
-  <body>
+    <!-- main site styles -->
+    <link rel="stylesheet" href="assets/styles.css">
+
+    <!-- A11Y widget + basic helpers (matching register) -->
+    <style>
+        /* === A11Y tab + panel === */
+        .a11y-tab{position:fixed;top:50%;right:0;transform:translateY(-50%);z-index:100000}
+        .a11y-tab button{writing-mode:vertical-rl;transform:rotate(180deg);background:#111;color:#fff;border:0;border-radius:12px 0 0 12px;padding:10px 8px;font-weight:600;box-shadow:0 6px 16px rgba(0,0,0,.25);cursor:pointer}
+        .a11y-panel{position:fixed;top:0;right:-340px;width:320px;max-width:90vw;height:100vh;background:#0f1115;color:#e8eef8;border-left:1px solid rgba(255,255,255,.12);box-shadow:-20px 0 40px rgba(0,0,0,.35);transition:right .28s ease;z-index:100001}
+        .a11y-panel.open{right:0}
+        .a11y-panel header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.12)}
+        .a11y-panel h3{margin:0;font-size:1.05rem}
+        .a11y-panel .body{padding:16px 18px;display:grid;gap:14px}
+        .a11y-panel .row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+        .a11y-panel .group{border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px;display:grid;gap:10px}
+        .switch{--w:44px;--h:24px;position:relative;display:inline-block;width:var(--w);height:var(--h)}
+        .switch input{opacity:0;width:0;height:0}
+        .slider{position:absolute;inset:0;cursor:pointer;background:#3a3f47;border-radius:var(--h);transition:.2s}
+        .slider:before{content:"";position:absolute;height:20px;width:20px;left:2px;top:2px;background:#fff;border-radius:50%;transition:.2s}
+        .switch input:checked + .slider{background:#5fb3ff}
+        .switch input:checked + .slider:before{transform:translateX(20px)}
+
+        /* High-contrast (same as register) */
+        body.a11y-contrast .glass-card{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important}
+        body.a11y-contrast .screen{background:#fff!important;border:2px solid #000!important;box-shadow:none!important}
+        body.a11y-contrast .status-bar,
+        body.a11y-contrast .screen-title,
+        body.a11y-contrast label,
+        body.a11y-contrast .muted,
+        body.a11y-contrast h1,
+        body.a11y-contrast h2{color:#000!important;text-shadow:none!important}
+        body.a11y-contrast .glass-input{background:#fff!important;color:#000!important;border:2px solid #000!important;box-shadow:none!important}
+        body.a11y-contrast .glass-input::placeholder{color:#444!important}
+        body.a11y-contrast .slide-track{background:#fff!important;border:2px solid #000!important;box-shadow:none!important}
+        body.a11y-contrast .slide-handle{background:#000!important;color:#fff!important;box-shadow:none!important}
+        body.a11y-contrast .slide-label{color:#000!important;text-shadow:none!important}
+        body.a11y-contrast a{color:#0037ff!important;text-decoration:underline!important}
+        body.a11y-contrast .phone-stage{min-height:60vh}
+        body.a11y-contrast .a11y-panel{background:#fff!important;color:#000!important;border-left:2px solid #000!important}
+        body.a11y-contrast .a11y-panel *{color:#000!important;text-shadow:none!important}
+        body.a11y-contrast .a11y-panel button{background:#000!important;color:#fff!important;border:2px solid #000!important;box-shadow:none!important}
+        body.a11y-contrast .a11y-tab button{background:#000!important;color:#fff!important}
+
+        /* Larger text toggle */
+        html.a11y-large{font-size:18px}
+    </style>
+</head>
+
+<body>
+<header>
     <h1>Welcome back</h1>
     <p class="muted">
-      Sign in to your account below. <br />
-      Already have an account? <a href="register.html">Sign up here</a>
+        Sign in to your account below. Don’t have an account?
+        <a href="register.html">Sign up here</a>
     </p>
-    <main class="container">
-      <section class="card">
-        <h2>Sign in to your account</h2>
+</header>
 
-        <form onsubmit="login(); return false;">
-          <div class="field">
-            <label for="username">Username</label>
-            <input type="text" name="username" id="username" required />
-          </div>
+<main class="container">
+    <section class="auth-shell">
+        <!-- Phone wrapper -->
+        <div class="phone-stage">
+            <div class="phone">
+                <div class="bezel">
+                    <div class="notch"></div>
 
-          <div class="field">
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" required />
-          </div>
+                    <!-- Screen holds our form -->
+                    <div class="screen">
+                        <div class="home-indicator" aria-hidden="true"></div>
 
-          <div class="actions glass-btn">
-            <div class="button-wrap">
-              <button type="submit">
-                <span>Login</span>
-              </button>
-              <div class="button-shadow"></div>
+                        <!-- Status bar  -->
+                        <div class="status-bar" aria-hidden="true">
+                            <span id="phone-time" class="time">⏻ 9:41</span>
+                            <div class="status-icons">
+                                <span>ᯤ 5G</span>
+                                <div class="battery"><span>100%</span><div class="battery-icon"></div></div>
+                            </div>
+                        </div>
+
+                        <img src="assets/contact-man.png" alt="User Icon" class="user-icon">
+
+                        <h2 class="screen-title">Sign in to your account</h2>
+
+                        <form id="loginForm" class="auth-form" novalidate>
+                            <div class="field">
+                                <input id="username" name="username" type="text"
+                                       class="glass-input" placeholder="Username" required autocomplete="username">
+                            </div>
+                            <div class="field">
+                                <input id="password" name="password" type="password"
+                                       class="glass-input" placeholder="Password" required autocomplete="current-password">
+                            </div>
+
+                            <!-- Slide to Login -->
+                            <div class="slide-cta" aria-label="Slide to login">
+                                <div class="slide-track">
+                                    <div class="slide-handle" aria-hidden="true">
+                                        <span class="power">⏻</span>
+                                    </div>
+                                    <span class="slide-label">Slide to login</span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="shadow-blob"></div>
             </div>
-          </div>
-        </form>
-      </section>
-    </main>
+        </div>
+    </section>
+</main>
 
-    <footer class="footer">© 2025 Team 16 LAMP</footer>
+<!-- Floating reviews rail (same structure as register) -->
+<aside id="reviewsFloat" class="reviews-float" role="complementary" aria-label="User reviews" aria-live="off"></aside>
 
-    <script type="text/javascript" src="js/main.js"></script>
-  </body>
+<footer class="footer">© 2025 Team 16 LAMP</footer>
+
+<!-- time in status bar -->
+<script>
+    function updatePhoneTime(){
+        const now=new Date();
+        let h=now.getHours(), m=String(now.getMinutes()).padStart(2,"0");
+        const ampm = h>=12 ? "PM":"AM";
+        h=h%12; h=h?h:12;
+        document.getElementById("phone-time").textContent = `${h}:${m} ${ampm}`;
+    }
+    updatePhoneTime(); setInterval(updatePhoneTime, 60000);
+</script>
+
+<!-- slider + LOGIN via fetch -->
+<script>
+    (() => {
+        const form   = document.getElementById('loginForm');
+        const track  = document.querySelector('.slide-track');
+        const handle = document.querySelector('.slide-handle');
+        const label  = document.querySelector('.slide-label');
+        if(!form||!track||!handle||!label) return;
+
+        // prevent native submit
+        form.addEventListener('submit', (e)=> e.preventDefault());
+
+        let dragging=false, startX=0, minX=4, maxX;
+        const THRESHOLD=0.88;
+
+        function setBounds(){
+            const r=track.getBoundingClientRect(), h=handle.getBoundingClientRect();
+            maxX = r.width - h.width - 4;
+        }
+        setBounds();
+        window.addEventListener('resize', setBounds);
+        window.addEventListener('orientationchange', setBounds);
+
+        function setPos(px){
+            const x=Math.max(minX, Math.min(px,maxX));
+            handle.style.left=`${x}px`;
+            const progress=(x-minX)/(maxX-minX);
+            label.style.opacity=String(1 - progress*0.85);
+        }
+
+        function clearErrorsOnInput(el){
+            const h=()=>{ el.classList.remove('field-error'); el.removeEventListener('input', h); };
+            el.addEventListener('input', h);
+        }
+
+        async function submitLogin(){
+            const u=form.querySelector('#username');
+            const p=form.querySelector('#password');
+
+            let ok=true;
+            [u,p].forEach(f=>{
+                if(!f.value.trim()){ ok=false; f.classList.add('field-error'); clearErrorsOnInput(f); }
+            });
+            if(!ok) throw new Error('Please enter Username and Password');
+
+            // UI lock
+            label.textContent='Logging in…';
+            handle.style.pointerEvents='none';
+            window.showToast && window.showToast('Logging in…','success');
+
+            const res = await fetch('/api/login.php', {
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body: JSON.stringify({ username: u.value.trim(), password: p.value }),
+                credentials: 'same-origin'
+            });
+
+            const data = await res.json().catch(()=> ({}));
+            if(!res.ok || data.error){
+                throw new Error(data.error || `Login failed (${res.status})`);
+            }
+
+            // success → route to your app shell/home
+            window.showToast && window.showToast('Welcome back! Redirecting…','success');
+            // Change target if your app lands elsewhere (e.g., main.html)
+            setTimeout(()=>{ window.location.href='profile.html'; }, 500);
+        }
+
+        function startDrag(e){
+            dragging=true;
+            startX=(e.touches?e.touches[0].clientX:e.clientX)-handle.offsetLeft;
+            document.addEventListener('pointermove', onMove);
+            document.addEventListener('pointerup', endDragOnce, {once:true});
+            document.addEventListener('touchmove', onMove, {passive:false});
+            document.addEventListener('touchend', endDragOnce, {once:true});
+        }
+        function onMove(e){
+            if(!dragging) return;
+            const x=(e.touches?e.touches[0].clientX:e.clientX)-startX;
+            setPos(x); e.preventDefault();
+        }
+        async function endDrag(){
+            dragging=false;
+            const x=parseFloat(handle.style.left||'0');
+            const progress=(x-minX)/(maxX-minX);
+
+            if(progress>=THRESHOLD){
+                setPos(maxX);
+                try{
+                    await submitLogin();
+                }catch(err){
+                    // shake + reset + toast
+                    track.classList.add('shake'); setTimeout(()=>track.classList.remove('shake'),320);
+                    window.showToast && window.showToast(err.message || 'Could not log in.','error');
+                    handle.style.pointerEvents='';
+                    label.textContent='Slide to login';
+                    handle.style.transition='left 240ms ease'; label.style.transition='opacity 240ms ease';
+                    setPos(minX);
+                    setTimeout(()=>{ handle.style.transition=''; label.style.transition=''; },260);
+                }
+            }else{
+                handle.style.transition='left 240ms ease'; label.style.transition='opacity 240ms ease';
+                setPos(minX); setTimeout(()=>{ handle.style.transition=''; label.style.transition=''; },260);
+            }
+            document.removeEventListener('pointermove', onMove);
+            document.removeEventListener('touchmove', onMove);
+        }
+        function endDragOnce(){ endDrag(); }
+
+        handle.addEventListener('pointerdown', startDrag);
+        handle.addEventListener('touchstart', startDrag, {passive:true});
+
+        // Keyboard accessibility
+        handle.setAttribute('tabindex','0');
+        handle.addEventListener('keydown', async (e)=>{
+            if(e.key==='Enter'||e.key===' '){
+                setPos(maxX);
+                try { await submitLogin(); }
+                catch(err){
+                    track.classList.add('shake'); setTimeout(()=>track.classList.remove('shake'),320);
+                    window.showToast && window.showToast(err.message || 'Could not log in.','error');
+                    handle.style.pointerEvents='';
+                    label.textContent='Slide to login';
+                    setPos(minX);
+                }
+            }
+        });
+    })();
+</script>
+
+<!-- Accessibility TAB -->
+<div class="a11y-tab">
+    <button id="a11yOpen" aria-controls="a11yPanel" aria-expanded="false">Accessibility</button>
+</div>
+
+<!-- Accessibility PANEL -->
+<aside id="a11yPanel" class="a11y-panel" aria-hidden="true" role="region" aria-label="Accessibility settings">
+    <header>
+        <h3>Accessibility</h3>
+        <button id="a11yClose" aria-label="Close panel">✕</button>
+    </header>
+    <div class="body">
+        <div class="row" aria-live="polite">
+            <span class="desc">Accessibility Mode</span>
+            <label class="switch">
+                <input id="a11yMaster" type="checkbox" role="switch" aria-label="Toggle accessibility mode">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="group" id="a11yOptions" aria-disabled="true">
+            <div class="row">
+                <label for="a11yContrast">High contrast</label>
+                <label class="switch"><input id="a11yContrast" type="checkbox"><span class="slider"></span></label>
+            </div>
+            <div class="row">
+                <label for="a11yLarge">Larger text</label>
+                <label class="switch"><input id="a11yLarge" type="checkbox"><span class="slider"></span></label>
+            </div>
+            <div class="group">
+                <div class="row" style="justify-content:start;gap:8px">
+                    <button id="ttsReadPage">🔊 Read page</button>
+                    <button id="ttsReadForm">🔊 Read form</button>
+                    <button id="ttsStop">⏹ Stop</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- Accessibility logic -->
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        const openBtn = document.getElementById('a11yOpen');
+        const closeBtn = document.getElementById('a11yClose');
+        const panel   = document.getElementById('a11yPanel');
+        const master  = document.getElementById('a11yMaster');
+        const options = document.getElementById('a11yOptions');
+        const form    = document.getElementById('loginForm');
+        if(!openBtn||!closeBtn||!panel||!master||!options) return;
+
+        function el(id){ return document.getElementById(id); }
+
+        // load saved state
+        let state={};
+        try{ state = JSON.parse(localStorage.getItem('a11ySettings')||'{}'); }catch(e){ state={}; }
+        delete state.dys; delete state.reduce;
+        if(typeof state.enabled==='undefined') state.enabled=false;
+
+        function apply(){
+            document.body.classList.toggle('a11y-contrast', !!state.contrast);
+            document.documentElement.classList.toggle('a11y-large', !!state.large);
+
+            master.checked = !!state.enabled;
+            options.style.opacity = state.enabled ? '1' : '.5';
+            options.style.pointerEvents = state.enabled ? 'auto' : 'none';
+
+            const c=el('a11yContrast'); if(c) c.checked=!!state.contrast;
+            const l=el('a11yLarge');    if(l) l.checked=!!state.large;
+        }
+        function save(){ try{ localStorage.setItem('a11ySettings', JSON.stringify(state)); }catch(e){} }
+        apply();
+
+        function togglePanel(show){
+            panel.classList.toggle('open', !!show);
+            panel.setAttribute('aria-hidden', String(!show));
+            openBtn.setAttribute('aria-expanded', String(!!show));
+        }
+        openBtn.addEventListener('click', ()=>togglePanel(true));
+        closeBtn.addEventListener('click', ()=>togglePanel(false));
+        document.addEventListener('keydown', e=>{ if(e.key==='Escape') togglePanel(false); });
+
+        master.addEventListener('change', e=>{ state.enabled=!!e.target.checked; apply(); save(); });
+        el('a11yContrast').addEventListener('change', e=>{ if(!state.enabled) return; state.contrast=!!e.target.checked; apply(); save(); });
+        el('a11yLarge').addEventListener('change',    e=>{ if(!state.enabled) return; state.large=!!e.target.checked; apply(); save(); });
+
+        /* ===== TTS ===== */
+        const synth=window.speechSynthesis;
+        function speak(text){
+            if(!state.enabled||!text||!synth) return;
+            if(synth.speaking) synth.cancel();
+            const u=new SpeechSynthesisUtterance(text);
+            u.rate=1.0; u.pitch=1.0; synth.speak(u);
+        }
+        function isVisible(el){
+            if(!el) return false;
+            const s=getComputedStyle(el);
+            if(s.display==='none'||s.visibility==='hidden'||parseFloat(s.opacity)===0) return false;
+            return !!el.getClientRects().length;
+        }
+        function controlLabel(){
+            const slideLbl=form?form.querySelector('.slide-cta .slide-label'):null;
+            const btn=document.getElementById('a11ySubmitBtn');
+            if(btn && isVisible(btn)) return (btn.textContent.trim()+' button');
+            if(slideLbl && isVisible(slideLbl)) return slideLbl.textContent.trim();
+            return '';
+        }
+        function pageText(){
+            const clone=document.body.cloneNode(true);
+            clone.querySelectorAll('script,style,link,meta,noscript,code,pre,textarea,.a11y-panel,.a11y-tab,.status-bar,.home-indicator,#a11ySubmitBtn,.slide-cta,[hidden],[aria-hidden="true"]').forEach(n=>n.remove());
+            let txt=(clone.innerText||'').replace(/\s+/g,' ').trim();
+            const ctl=controlLabel(); if(ctl) txt += (txt?'. ':'') + ctl;
+            return txt;
+        }
+        function formText(){
+            if(!form) return '';
+            const parts=[];
+            const title=document.querySelector('.screen-title'); if(title&&isVisible(title)) parts.push(title.textContent.trim());
+            form.querySelectorAll('input').forEach(i=>{ if(isVisible(i)) parts.push(i.getAttribute('placeholder')||i.name||i.id||'field'); });
+            const ctl=controlLabel(); if(ctl) parts.push(ctl);
+            return parts.join('. ');
+        }
+        const rp=el('ttsReadPage'), rf=el('ttsReadForm'), st=el('ttsStop');
+        if(rp) rp.addEventListener('click',()=>speak(pageText()));
+        if(rf) rf.addEventListener('click',()=>speak(formText()));
+        if(st) st.addEventListener('click',()=>{ if(synth) synth.cancel(); });
+    });
+</script>
+
+<!-- Toast (container + helper) -->
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>
+    window.showToast = function (msg, type = 'info') {
+        const t = document.getElementById('toast'); if (!t) return;
+        t.className = `toast ${type}`;
+        t.textContent = msg;
+        t.classList.add('show');
+        clearTimeout(window.__toastTimer);
+        window.__toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+    };
+</script>
+
+<!-- ===== Floating reviews (same dataset + logic as register) ===== -->
+<script>
+    const REVIEWS = [
+        { text:"I was keeping everything in a spreadsheet before this. Now I just add a contact when I meet someone, and a quick search brings them right up. Feels simple and private; My contacts stay mine.", name:"Alex N.",   title:"Freelance developer",  avatar:"AN" },
+        { text:"Registration took a minute and I was off. I like that I can fix a phone number or delete a duplicate without digging through menus. It does the basics perfectly and doesn’t try to be a CRM.",    name:"Priya S.",  title:"Small-business manager",          avatar:"PS" },
+        { text:"As a teacher I just need names, emails, and a note or two. Adding is fast, searching is instant, and nothing is shared by default. Exactly the right level of simple.",            name:"Diego R.",  title:"Teacher",      avatar:"DR" },
+        { text:"I manage contractors and this keeps me sane. Edit, save, done. The delete actually deletes, which I appreciate. Login is straightforward and I’m in and out all day.",    name:"Maya T.",   title:"Operations Coordinator",      avatar:"MT" },
+        { text:"Love the focus. I can add a contact during a call, then later search by last name to find them and update notes. No sharing headache; Just my own list that I control.",          name:"Chris L.",  title:"Real estate agent",avatar:"CL" },
+        { text:"I moved off my phone’s Contacts because this is faster to type on. Search finds people even from my notes, edits are instant, and I like that nothing is shared or synced unless I say so.", name:"Hannah K.", title:"Coordinator", avatar:"HK" }
+    ];
+
+    (function multiFloat(){
+        const rail = document.getElementById('reviewsFloat');
+        if(!rail) return;
+
+        const COUNT=3, DUR=20000;
+        rail.innerHTML="";
+
+        function initials(name){
+            return (name||'').trim().split(/\s+/).map(s=>s[0]).slice(0,2).join('').toUpperCase() || '??';
+        }
+        function buildCard(startIdx){
+            const card=document.createElement('div');
+            card.className='float-card';
+            card.style.animationDuration=(DUR/1000)+'s';
+            const stars=document.createElement('div'); stars.className='stars'; stars.textContent='★★★★★'; stars.setAttribute('aria-hidden','true');
+            const quote=document.createElement('blockquote');
+            const meta=document.createElement('div'); meta.className='meta';
+            const avatar=document.createElement('div'); avatar.className='avatar';
+            const who=document.createElement('div'); who.className='who';
+            const nameEl=document.createElement('strong');
+            const titleEl=document.createElement('span');
+            who.appendChild(nameEl); who.appendChild(titleEl);
+            meta.appendChild(avatar); meta.appendChild(who);
+            card.appendChild(stars); card.appendChild(quote); card.appendChild(meta);
+
+            function setReview(n){
+                const r=REVIEWS[n % REVIEWS.length];
+                quote.textContent='“'+r.text+'”';
+                nameEl.textContent=r.name;
+                titleEl.textContent=r.title;
+                avatar.textContent=(r.avatar || initials(r.name));
+                card.dataset.reviewIndex=String(n);
+            }
+
+            setReview(startIdx);
+            card.addEventListener('animationiteration', ()=>{
+                const current=parseInt(card.dataset.reviewIndex||'0',10);
+                setReview((current+COUNT)%REVIEWS.length);
+            });
+
+            return card;
+        }
+
+        for(let i=0;i<COUNT;i++){
+            const card=buildCard(i%REVIEWS.length);
+            card.style.animationDelay=((i*DUR/COUNT)/1000)+'s';
+            rail.appendChild(card);
+        }
+    })();
+</script>
+
+</body>
 </html>

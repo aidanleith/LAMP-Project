@@ -1,21 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
-    <link rel="stylesheet" href="assets/styles.css" />
+    <meta charset="UTF-8" />
+    <title>Contacts</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="assets/app.css" />
 </head>
 <body>
-    <div class="field">
-      <h2>Add a contact by entering the fields below.</h2>
-      <input type="text" name="firstName" id="firstName" placeholder="Enter first name." required/>
-      <input type="text" name="lastName" id="lastName" placeholder="Enter last name." required />
-      <input type="text" name="phoneNumber" id="phoneNumber" placeholder="Enter phone number" required />
-      <input type="text" name="email" id="email" placeholder="Enter email" required />
-      <button id="add-contact-button">Add</button>
-    </div>
+<div class="app">
 
-    <script type="text/javascript" src="js/main.js"></script>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="logo">📇</div>
+            <div class="name">Contacts</div>
+        </div>
+
+        <nav class="nav">
+            <a class="nav-item active" href="#">Contacts</a>
+            <a class="nav-item" href="login.html">Log out</a>
+        </nav>
+    </aside>
+
+    <!-- Main area -->
+    <div class="main">
+
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="crumbs">Home / <strong>Contacts</strong></div>
+            <div class="actions">
+                <button id="addBtn" class="btn primary">+ New Contact</button>
+            </div>
+        </header>
+
+        <!-- Toolbar -->
+        <section class="toolbar">
+            <div class="tool-left">
+                <input id="searchInput" class="input" type="search" placeholder="Search for contacts…" />
+            </div>
+            <div class="tool-right">
+                <select id="sortSelect" class="input">
+                    <option value="">Sort by</option>
+                    <option value="firstName">First name</option>
+                    <option value="lastName">Last name</option>
+                    <option value="email">Email</option>
+                </select>
+                <button id="refreshBtn" class="btn">Refresh</button>
+            </div>
+        </section>
+
+        <!-- Results grid -->
+        <main class="content">
+            <div id="cardsGrid" class="grid" aria-live="polite"></div>
+        </main>
+
+        <footer class="footer">© 2025 Team 16 LAMP</footer>
+    </div>
+</div>
+
+<!-- Add / Edit modal  -->
+<dialog id="contactDialog" class="modal">
+    <form id="contactForm" method="dialog">
+        <input type="hidden" name="id" id="f_id" />
+
+        <h3 id="dialogTitle">New Contact</h3>
+
+        <div class="form-grid">
+            <div>
+                <label for="f_firstName">First name</label>
+                <input id="f_firstName" name="firstName" class="input" required />
+            </div>
+            <div>
+                <label for="f_lastName">Last name</label>
+                <input id="f_lastName" name="lastName" class="input" required />
+            </div>
+            <div>
+                <label for="f_email">Email</label>
+                <input id="f_email" name="email" type="email" class="input" />
+            </div>
+            <div>
+                <label for="f_phone">Phone</label>
+                <input id="f_phone" name="phoneNumber" class="input" />
+            </div>
+            <div class="span-2">
+                <label for="f_notes">Notes</label>
+                <textarea id="f_notes" name="notes" class="input" rows="3"></textarea>
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button type="button" id="cancelDialog" class="btn">Cancel</button>
+            <button type="submit" class="btn primary" id="saveDialog">Save</button>
+        </div>
+    </form>
+</dialog>
+
+<!-- Toast -->
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="js/main.js" defer></script>
 </body>
 </html>
