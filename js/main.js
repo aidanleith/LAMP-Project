@@ -64,8 +64,8 @@
 
     const normalize = (list=[]) => list.map(c => ({
         id:          c.id || c.contactId || c.contactID || c._id || c.email || rid(),
-        firstName:   c.firstName || c.fname || '',
-        lastName:    c.lastName  || c.lname || '',
+        firstName:   c.firstName || c.first_name || c.fname || '',
+        lastName:    c.lastName  || c.last_name  || c.lname || '',
         email:       c.email || '',
         phoneNumber: c.phoneNumber || c.phone || c.phone_number || '',
         notes:       c.notes || ''
@@ -204,10 +204,10 @@
         e.preventDefault();
         const obj = {
             id:          f_id.value || undefined,
-            firstName:   f_first.value.trim(),
-            lastName:    f_last.value.trim(),
+            first_name:   f_first.value.trim(),
+            last_name:    f_last.value.trim(),
             email:       f_email.value.trim(),
-            phoneNumber: f_phone.value.trim(),
+            phone_number: f_phone.value.trim(),
             notes:       f_notes.value.trim()
         };
         try{
