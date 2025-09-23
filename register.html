@@ -188,11 +188,13 @@
         }
 
         async function submitRegistration(){
+            const fn=form.querySelector('#first_name');
+            const l=form.querySelector('#last_name');
             const u=form.querySelector('#username');
             const p=form.querySelector('#password');
 
             let ok=true;
-            [u,p].forEach(f=>{
+            [fn,l,u,p].forEach(f=>{
                 if(!f.value.trim()){ ok=false; f.classList.add('field-error'); clearErrorsOnInput(f); }
             });
             if(!ok) throw new Error('Please enter Username and Password');
@@ -206,7 +208,7 @@
             const res = await fetch('/api/register.php', {
                 method:'POST',
                 headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({ first_name: f.value.trim() , last_name: l.value.trim() , username: u.value.trim(), password: p.value }),
+                body: JSON.stringify({ first_name: fn.value.trim() , last_name: l.value.trim() , username: u.value.trim(), password: p.value }),
                 credentials: 'same-origin'
             });
 
