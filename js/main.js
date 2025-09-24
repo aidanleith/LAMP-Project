@@ -116,8 +116,7 @@
         obj.user_id = localStorage.getItem('userId');
         const r = await fetch(API.del, { method:'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(obj),credentials: 'same-origin'});
         if(!r.ok) throw new Error('delete failed');
-        const response = await r.json().catch(() => ({}));
-        if (response.error) {throw new Error(response.error);}return true;
+        return r.json().catch(() => ({}));
     }
 
     // ---------- render ----------
