@@ -82,7 +82,7 @@
         }
         const userId = localStorage.getItem('userId');
         try{
-            const r = await fetch(`${API.search}?q=${encodeURIComponent(q)}&userID=${userId}`, { credentials:'same-origin' });
+            const r = await fetch(`${API.search}?q=${encodeURIComponent(q)}&userId=${userId}`, { credentials:'same-origin' });
             if(!r.ok) throw new Error();
             const data = await r.json().catch(() => []);
             const list = Array.isArray(data) ? data : (data.results || []);
