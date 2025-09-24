@@ -294,7 +294,7 @@ html.a11y-large{ font-size:18px; }
 .toast.error{ background:#b00020; }
 .toast.success{ background:#0a8f3e; }
 
-/* ================= Floating reviews ================= */
+/* ================= Floating reviews ================ */
 #reviewsFloat{
     position:fixed; right:20px; width:300px; max-width:88vw; z-index:9999; pointer-events:none;
 }
