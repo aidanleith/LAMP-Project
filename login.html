@@ -181,7 +181,7 @@
             handle.style.pointerEvents='none';
             window.showToast && window.showToast('Logging in…','success');
 
-            const res = await fetch('/api/login.php', {
+            const res = await fetch('http://134.199.196.132/contact_manager/api/register.php', {
                 method:'POST',
                 headers:{'Content-Type':'application/json'},
                 body: JSON.stringify({ username: u.value.trim(), password: p.value }),
