@@ -197,7 +197,7 @@
             [fn,l,u,p].forEach(f=>{
                 if(!f.value.trim()){ ok=false; f.classList.add('field-error'); clearErrorsOnInput(f); }
             });
-            if(!ok) throw new Error('Please enter Username and Password');
+            if(!ok) throw new Error('Please enter Username and Password and name');
 
             // lock UI
             label.textContent='Registering…';
