@@ -201,6 +201,8 @@
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && dlg?.open) closeDialog(); });
 
     on(form, 'submit', async (e) => {
+
+        const user_id = localStorage.getItem('user_id');
         e.preventDefault();
         const obj = {
             id:          f_id.value || undefined,
@@ -208,7 +210,8 @@
             last_name:    f_last.value.trim(),
             email:       f_email.value.trim(),
             phone_number: f_phone.value.trim(),
-            notes:       f_notes.value.trim()
+            notes:       f_notes.value.trim(),
+            user_id:    user_id
         };
         try{
             if (obj.id) await apiUpdate(obj);
