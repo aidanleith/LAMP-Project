@@ -16,6 +16,12 @@ if ($conn->connect_error) {
 $search = isset($_GET['q']) ? $conn->real_escape_string($_GET['q']) : '';
 $userId = isset($_GET['userId']) ? (int)$_GET['userId'] : 0;
 
+if ($userId <= 0) {
+    http_response_code(401); // Unauthorized
+    echo json_encode(['error' => 'User ID is required']);
+    exit();
+}
+
 // Search in contacts table (using firstName, lastName, and email)
 $results = [];
 
