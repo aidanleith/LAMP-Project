@@ -14,6 +14,7 @@ if ($conn->connect_error) {
 
 // Get search query from request
 $search = isset($_GET['q']) ? $conn->real_escape_string($_GET['q']) : '';
+$userId = isset($_GET['userId']) ? (int)$_GET['userId'] : 0;
 
 if (empty($search)) {
     echo json_encode([]);
