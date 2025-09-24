@@ -228,10 +228,9 @@
     grid?.addEventListener('click', async (e) => {
         const card = e.target.closest('.card'); if(!card) return;
         const id = card.dataset.id;
-        const c = null;
+        const c = CURRENT.find(c => c.id === id);
         if (e.target.closest('.edit')){
-            c = CURRENT.find(c => c.id === id);
-            if (c) openDialog(c);
+            openDialog(c);
         } else if (e.target.closest('.del')){
             if (!confirm('Delete this contact?')) return;
             try{
