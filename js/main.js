@@ -210,7 +210,6 @@
             last_name:    f_last.value.trim(),
             email:       f_email.value.trim(),
             phone_number: f_phone.value.trim(),
-            notes:       f_notes.value.trim(),
             user_id:    userId
         };
         try{
