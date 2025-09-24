@@ -94,8 +94,7 @@
 
     async function apiAdd(obj){
         if (USE_DEMO){ obj.id = rid(); demoData.unshift(obj); return { ok:true, id: obj.id }; }
-        const fd = new FormData(); Object.entries(obj).forEach(([k,v]) => v!=null && fd.append(k,v));
-        const r  = await fetch(API.add, { method:'POST', body: fd, credentials:'same-origin' });
+        const r  = await fetch(API.add, { method:'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(obj),credentials: 'same-origin'});
         if(!r.ok) throw new Error('add failed');
         return r.json().catch(()=>({}));
     }
