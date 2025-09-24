@@ -193,6 +193,14 @@
                 throw new Error(data.error || `Login failed (${res.status})`);
             }
 
+            if (data.id) {
+            localStorage.setItem('userId', data.id);
+            localStorage.setItem('userFirstName', data.firstName);
+            localStorage.setItem('userLastName', data.lastName);
+            } else {
+                throw new Error('Login response was missing user information.');
+            }
+
             // success → route to your app shell/home
             window.showToast && window.showToast('Welcome back! Redirecting…','success');
             // Change target if your app lands elsewhere (e.g., main.html)
