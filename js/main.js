@@ -111,10 +111,9 @@
         return r.json().catch(()=>({}));
     }
 
-    async function apiDelete(id){
-        if (USE_DEMO){ demoData = demoData.filter(c => c.id !== id); return true; }
-        const fd = new FormData(); fd.append('id', id);
-        const r  = await fetch(API.del, { method:'POST', body: fd, credentials:'same-origin' });
+    async function apiDelete(obj){
+        if (USE_DEMO){ demoData = demoData.filter(c => c.id !== obj.id); return true; }
+        const r  = await fetch(API.add, { method:'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(obj),credentials: 'same-origin'});
         if(!r.ok) throw new Error('delete failed');
         return true;
     }
