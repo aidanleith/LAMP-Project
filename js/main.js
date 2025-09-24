@@ -202,7 +202,7 @@
 
     on(form, 'submit', async (e) => {
 
-        const user_id = localStorage.getItem('user_id');
+        const userId = localStorage.getItem('userId');
         e.preventDefault();
         const obj = {
             id:          f_id.value || undefined,
@@ -211,7 +211,7 @@
             email:       f_email.value.trim(),
             phone_number: f_phone.value.trim(),
             notes:       f_notes.value.trim(),
-            user_id:    user_id
+            user_id:    userId
         };
         try{
             if (obj.id) await apiUpdate(obj);
