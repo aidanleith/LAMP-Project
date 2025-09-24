@@ -113,7 +113,7 @@
 
     async function apiDelete(obj){
         if (USE_DEMO){ demoData = demoData.filter(c => c.id !== obj.id); return true; }
-        const r  = await fetch(API.add, { method:'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(obj),credentials: 'same-origin'});
+        const r  = await fetch(API.del, { method:'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(obj),credentials: 'same-origin'});
         if(!r.ok) throw new Error('delete failed');
         return true;
     }
