@@ -116,7 +116,10 @@
         obj.user_id = localStorage.getItem('userId');
         const r = await fetch(API.del, { method:'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(obj),credentials: 'same-origin'});
         if(!r.ok) throw new Error('delete failed');
-        return r.json().catch(() => ({}));
+
+        const response = await r.json().catch(() => ({}));
+        if (response.error) {throw new Error(response.error);}
+        return true;
     }
 
     // ---------- render ----------
@@ -225,13 +228,14 @@
     grid?.addEventListener('click', async (e) => {
         const card = e.target.closest('.card'); if(!card) return;
         const id = card.dataset.id;
+        const c = null;
         if (e.target.closest('.edit')){
-            const c = CURRENT.find(x => x.id === id);
+            c = CURRENT.find(c => c.id === id);
             if (c) openDialog(c);
         } else if (e.target.closest('.del')){
             if (!confirm('Delete this contact?')) return;
             try{
-                await apiDelete(id);
+                await apiDelete(c);
                 toast('Deleted','success');
                 await refresh();
             }catch{
