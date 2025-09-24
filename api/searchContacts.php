@@ -16,22 +16,16 @@ if ($conn->connect_error) {
 $search = isset($_GET['q']) ? $conn->real_escape_string($_GET['q']) : '';
 $userId = isset($_GET['userId']) ? (int)$_GET['userId'] : 0;
 
-if (empty($search)) {
-    echo json_encode([]);
-    exit();
-}
-
 // Search in contacts table (using firstName, lastName, and email)
 $results = [];
 
-
-$sql = "SELECT id, first_name, last_name, phone_number, email FROM contacts WHERE first_name LIKE '%$search%' OR last_name LIKE '%$search%' OR email LIKE '%$search%' OR phone_number LIKE '%$search%'";
+// The SQL query now filters by user_id
+$sql = "SELECT id, first_name, last_name, phone_number, email FROM contacts WHERE user_id = {$userId} AND (first_name LIKE '%$search%' OR last_name LIKE '%$search%' OR email LIKE '%$search%' OR phone_number LIKE '%$search%')";
 $res = $conn->query($sql);
 
 // If query executed successfully, fetch rows into $results
 if ($res) {
     while ($row = $res->fetch_assoc()) {
-       // Could be wrong
         $row['firstName'] = $row['first_name'];
         $row['lastName'] = $row['last_name'];
         $row['phoneNumber'] = $row['phone_number'];
