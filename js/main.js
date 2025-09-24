@@ -106,8 +106,7 @@
             if (i > -1) demoData[i] = { ...demoData[i], ...obj };
             return { ok:true };
         }
-        const fd = new FormData(); Object.entries(obj).forEach(([k,v]) => v!=null && fd.append(k,v));
-        const r  = await fetch(API.update, { method:'POST', body: fd, credentials:'same-origin' });
+        const r  = await fetch(API.update, { method:'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(obj),credentials: 'same-origin'});
         if(!r.ok) throw new Error('update failed');
         return r.json().catch(()=>({}));
     }
