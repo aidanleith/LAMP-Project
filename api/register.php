@@ -1,5 +1,9 @@
 <?php
 
+	header("Access-Control-Allow-Origin: http://cop4331-lamp.xyz");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
+    header("Access-Control-Allow-Methods: POST, OPTIONS");
+
 	$conn = new mysqli("localhost", "group16", "welovegroup16", "COP4331_lamp_group_16"); 	
 
 	ini_set('display_errors', 1);
