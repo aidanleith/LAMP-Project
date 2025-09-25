@@ -2,69 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Register Page</title>
 
     <!-- main site styles -->
     <link rel="stylesheet" href="assets/Registerstyles.css" />
 
-    <!-- A11Y widget + Toast  -->
-    <style>
-        /* === A11Y tab + panel === */
-        .a11y-tab{position:fixed;top:50%;right:0;transform:translateY(-50%);z-index:100000}
-        .a11y-tab button{writing-mode:vertical-rl;transform:rotate(180deg);background:#111;color:#fff;border:0;border-radius:12px 0 0 12px;padding:10px 8px;font-weight:600;box-shadow:0 6px 16px rgba(0,0,0,.25);cursor:pointer}
-        .a11y-panel{position:fixed;top:0;right:-340px;width:320px;max-width:90vw;height:100vh;background:#0f1115;color:#e8eef8;border-left:1px solid rgba(255,255,255,.12);box-shadow:-20px 0 40px rgba(0,0,0,.35);transition:right .28s ease;z-index:100001}
-        .a11y-panel.open{right:0}
-        .a11y-panel header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.12)}
-        .a11y-panel h3{margin:0;font-size:1.05rem}
-        .a11y-panel .body{padding:16px 18px;display:grid;gap:14px}
-        .a11y-panel .row{display:flex;align-items:center;justify-content:space-between;gap:8px}
-        .a11y-panel .group{border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px;display:grid;gap:10px}
-        .switch{--w:44px;--h:24px;position:relative;display:inline-block;width:var(--w);height:var(--h)}
-        .switch input{opacity:0;width:0;height:0}
-        .slider{position:absolute;inset:0;cursor:pointer;background:#3a3f47;border-radius:var(--h);transition:.2s}
-        .slider:before{content:"";position:absolute;height:20px;width:20px;left:2px;top:2px;background:#fff;border-radius:50%;transition:.2s}
-        .switch input:checked + .slider{background:#5fb3ff}
-        .switch input:checked + .slider:before{transform:translateX(20px)}
-
-        /* High-contrast */
-        body.a11y-contrast .glass-card{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important}
-        body.a11y-contrast .screen{background:#fff!important;border:2px solid #000!important;box-shadow:none!important}
-        body.a11y-contrast .status-bar,
-        body.a11y-contrast .screen-title,
-        body.a11y-contrast label,
-        body.a11y-contrast .muted,
-        body.a11y-contrast h1,
-        body.a11y-contrast h2{color:#000!important;text-shadow:none!important}
-        body.a11y-contrast .glass-input{background:#fff!important;color:#000!important;border:2px solid #000!important;box-shadow:none!important}
-        body.a11y-contrast .glass-input::placeholder{color:#444!important}
-        body.a11y-contrast .slide-track{background:#fff!important;border:2px solid #000!important;box-shadow:none!important}
-        body.a11y-contrast .slide-handle{background:#000!important;color:#fff!important;box-shadow:none!important}
-        body.a11y-contrast .slide-label{color:#000!important;text-shadow:none!important}
-        body.a11y-contrast a{color:#0037ff!important;text-decoration:underline!important}
-        body.a11y-contrast .phone-stage{min-height:60vh}
-        body.a11y-contrast .a11y-panel{background:#fff!important;color:#000!important;border-left:2px solid #000!important}
-        body.a11y-contrast .a11y-panel *{color:#000!important;text-shadow:none!important}
-        body.a11y-contrast .a11y-panel button{background:#000!important;color:#fff!important;border:2px solid #000!important;box-shadow:none!important}
-        body.a11y-contrast .a11y-tab button{background:#000!important;color:#fff!important}
-
-        /* Larger text toggle */
-        html.a11y-large{font-size:18px}
-
-        /* Toast */
-        .toast{
-            position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
-            background:#111; color:#fff; padding:10px 14px; border-radius:10px;
-            box-shadow:0 10px 24px rgba(0,0,0,.25);
-            z-index:2147483647;
-            opacity:0; pointer-events:none;
-            transition:opacity .18s ease, transform .18s ease;
-            font:600 .95rem/1.1 system-ui,-apple-system,"Inter",sans-serif;
-        }
-        .toast.show{ opacity:1; transform:translateX(-50%) translateY(-4px); }
-        .toast.error{ background:#b00020; }
-        .toast.success{ background:#0a8f3e; }
-        body.a11y-contrast .toast{background:#000!important;color:#fff!important;border:2px solid #000!important;box-shadow:none!important}
-    </style>
 </head>
 
 <body>
@@ -76,8 +19,18 @@
     </p>
 </header>
 
+<!-- Accessibility Box -->
+<aside class="a11y-box" role="complementary" aria-label="Accessibility options">
+    <h2>Need an easier login time?</h2>
+    <p>We’ve got you covered. Switch to a simple, accessible screen designed for
+        folks who are low-vision, use screen readers, or prefer plain forms.</p>
+    <button id="enterSimpleMode" class="a11y-btn">Use Simple Mode</button>
+    <p class="a11y-note">Includes higher contrast, larger text, label-first fields, and a standard submit button.</p>
+</aside>
+
 <main class="container">
-    <section class="auth-shell">
+    <!-- Visual/phone UI (hidden when Simple Mode is on) -->
+    <section class="auth-shell" aria-hidden="false">
         <div class="phone-stage">
             <div class="phone">
                 <div class="bezel">
@@ -100,16 +53,6 @@
                         <h2 class="screen-title">Create your account</h2>
 
                         <form id="registerForm" class="auth-form" novalidate>
-                            <div class="field">
-                                <input id="first_name" name="first_name" type="text"
-                                       class="glass-input" placeholder="first name" required autocomplete="name">
-                            </div>
-
-                            <div class="field">
-                                <input id="last_name" name="last_name" type="text"
-                                       class="glass-input" placeholder="last name" required autocomplete="name">
-                            </div>
-
                             <div class="field">
                                 <input id="username" name="username" type="text"
                                        class="glass-input" placeholder="Username" required autocomplete="username">
@@ -136,6 +79,23 @@
             </div>
         </div>
     </section>
+
+    <!-- Simple Mode  -->
+    <section class="simple-auth" aria-hidden="true" hidden>
+        <h2 class="simple-title">Create your account</h2>
+        <form id="registerSimpleForm" class="simple-form" novalidate>
+            <div class="simple-field">
+                <label for="simple-username">Username</label>
+                <input id="simple-username" name="username" type="text" autocomplete="username" required />
+            </div>
+            <div class="simple-field">
+                <label for="simple-password">Password</label>
+                <input id="simple-password" name="password" type="password" autocomplete="new-password" required />
+            </div>
+            <button type="submit" class="simple-submit">Create account</button>
+            <button type="button" id="exitSimpleMode" class="simple-secondary">Return to visual mode</button>
+        </form>
+    </section>
 </main>
 
 <footer class="footer">© 2025 Team 16 LAMP</footer>
@@ -147,7 +107,8 @@
         let h=now.getHours(), m=String(now.getMinutes()).padStart(2,"0");
         const ampm = h>=12 ? "PM":"AM";
         h=h%12; h=h?h:12;
-        document.getElementById("phone-time").textContent = `${h}:${m} ${ampm}`;
+        const el = document.getElementById("phone-time");
+        if (el) el.textContent = `${h}:${m} ${ampm}`;
     }
     updatePhoneTime(); setInterval(updatePhoneTime, 60000);
 </script>
@@ -188,27 +149,24 @@
         }
 
         async function submitRegistration(){
-            const fn=form.querySelector('#first_name');
-            const l=form.querySelector('#last_name');
             const u=form.querySelector('#username');
             const p=form.querySelector('#password');
 
             let ok=true;
-            [fn,l,u,p].forEach(f=>{
+            [u,p].forEach(f=>{
                 if(!f.value.trim()){ ok=false; f.classList.add('field-error'); clearErrorsOnInput(f); }
             });
-            if(!ok) throw new Error('Please enter Username and Password and name');
+            if(!ok) throw new Error('Please enter Username and Password');
 
             // lock UI
             label.textContent='Registering…';
             handle.style.pointerEvents='none';
             window.showToast && window.showToast('Registering…','success');
 
-
             const res = await fetch('/api/register.php', {
                 method:'POST',
                 headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({ first_name: fn.value.trim() , last_name: l.value.trim() , username: u.value.trim(), password: p.value }),
+                body: JSON.stringify({ username: u.value.trim(), password: p.value }),
                 credentials: 'same-origin'
             });
 
@@ -284,132 +242,64 @@
     })();
 </script>
 
-<!-- Accessibility TAB -->
-<div class="a11y-tab">
-    <button id="a11yOpen" aria-controls="a11yPanel" aria-expanded="false">Accessibility</button>
-</div>
-
-<!-- Accessibility PANEL -->
-<aside id="a11yPanel" class="a11y-panel" aria-hidden="true" role="region" aria-label="Accessibility settings">
-    <header>
-        <h3>Accessibility</h3>
-        <button id="a11yClose" aria-label="Close panel">✕</button>
-    </header>
-    <div class="body">
-        <div class="row" aria-live="polite">
-            <span class="desc">Accessibility Mode</span>
-            <label class="switch">
-                <input id="a11yMaster" type="checkbox" role="switch" aria-label="Toggle accessibility mode">
-                <span class="slider"></span>
-            </label>
-        </div>
-
-        <div class="group" id="a11yOptions" aria-disabled="true">
-            <div class="row">
-                <label for="a11yContrast">High contrast</label>
-                <label class="switch"><input id="a11yContrast" type="checkbox"><span class="slider"></span></label>
-            </div>
-            <div class="row">
-                <label for="a11yLarge">Larger text</label>
-                <label class="switch"><input id="a11yLarge" type="checkbox"><span class="slider"></span></label>
-            </div>
-            <div class="group">
-                <div class="row" style="justify-content:start;gap:8px">
-                    <button id="ttsReadPage">🔊 Read page</button>
-                    <button id="ttsReadForm">🔊 Read form</button>
-                    <button id="ttsStop">⏹ Stop</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</aside>
-
-<!-- Accessibility logic -->
+<!-- Simple Mode toggling + simple form submit (new) -->
 <script>
-    document.addEventListener('DOMContentLoaded', function(){
-        const openBtn = document.getElementById('a11yOpen');
-        const closeBtn = document.getElementById('a11yClose');
-        const panel   = document.getElementById('a11yPanel');
-        const master  = document.getElementById('a11yMaster');
-        const options = document.getElementById('a11yOptions');
-        const form    = document.getElementById('registerForm');
-        if(!openBtn||!closeBtn||!panel||!master||!options) return;
+    (function a11ySimpleMode(){
+        const enterBtn = document.getElementById('enterSimpleMode');
+        const exitBtn  = document.getElementById('exitSimpleMode');
+        const simple   = document.querySelector('.simple-auth');
+        const visual   = document.querySelector('.auth-shell');
 
-        function el(id){ return document.getElementById(id); }
-
-        // load saved state
-        let state={};
-        try{ state = JSON.parse(localStorage.getItem('a11ySettings')||'{}'); }catch(e){ state={}; }
-        delete state.dys; delete state.reduce;
-        if(typeof state.enabled==='undefined') state.enabled=false;
-
-        function apply(){
-            document.body.classList.toggle('a11y-contrast', !!state.contrast);
-            document.documentElement.classList.toggle('a11y-large', !!state.large);
-
-            master.checked = !!state.enabled;
-            options.style.opacity = state.enabled ? '1' : '.5';
-            options.style.pointerEvents = state.enabled ? 'auto' : 'none';
-
-            const c=el('a11yContrast'); if(c) c.checked=!!state.contrast;
-            const l=el('a11yLarge');    if(l) l.checked=!!state.large;
+        function applySimple(on){
+            document.body.classList.toggle('a11y-simple', !!on);
+            document.documentElement.classList.toggle('a11y-large', !!on);   // larger base text
+            if(simple) { simple.hidden = !on; simple.setAttribute('aria-hidden', String(!on)); }
+            if(visual) { visual.setAttribute('aria-hidden', String(!!on)); }
+            try{ localStorage.setItem('a11ySimple', on ? '1' : '0'); }catch(e){}
+            if(on){
+                const first = document.getElementById('simple-username');
+                if(first) first.focus();
+            }
         }
-        function save(){ try{ localStorage.setItem('a11ySettings', JSON.stringify(state)); }catch(e){} }
-        apply();
 
-        function togglePanel(show){
-            panel.classList.toggle('open', !!show);
-            panel.setAttribute('aria-hidden', String(!show));
-            openBtn.setAttribute('aria-expanded', String(!!show));
-        }
-        openBtn.addEventListener('click', ()=>togglePanel(true));
-        closeBtn.addEventListener('click', ()=>togglePanel(false));
-        document.addEventListener('keydown', e=>{ if(e.key==='Escape') togglePanel(false); });
+        // Load persisted choice
+        let saved = '0';
+        try{ saved = localStorage.getItem('a11ySimple') || '0'; }catch(e){}
+        applySimple(saved === '1');
 
-        master.addEventListener('change', e=>{ state.enabled=!!e.target.checked; apply(); save(); });
-        el('a11yContrast').addEventListener('change', e=>{ if(!state.enabled) return; state.contrast=!!e.target.checked; apply(); save(); });
-        el('a11yLarge').addEventListener('change',    e=>{ if(!state.enabled) return; state.large=!!e.target.checked; apply(); save(); });
+        if(enterBtn) enterBtn.addEventListener('click', ()=> applySimple(true));
+        if(exitBtn)  exitBtn.addEventListener('click',  ()=> applySimple(false));
 
-        /* ===== TTS ===== */
-        const synth=window.speechSynthesis;
-        function speak(text){
-            if(!state.enabled||!text||!synth) return;
-            if(synth.speaking) synth.cancel();
-            const u=new SpeechSynthesisUtterance(text);
-            u.rate=1.0; u.pitch=1.0; synth.speak(u);
-        }
-        function isVisible(el){
-            if(!el) return false;
-            const s=getComputedStyle(el);
-            if(s.display==='none'||s.visibility==='hidden'||parseFloat(s.opacity)===0) return false;
-            return !!el.getClientRects().length;
-        }
-        function controlLabel(){
-            const slideLbl=form?form.querySelector('.slide-cta .slide-label'):null;
-            return isVisible(slideLbl) ? slideLbl.textContent.trim() : '';
-        }
-        function pageText(){
-            const clone=document.body.cloneNode(true);
-            clone.querySelectorAll('script,style,link,meta,noscript,code,pre,textarea,.a11y-panel,.a11y-tab,.status-bar,.home-indicator,[hidden],[aria-hidden="true"]').forEach(n=>n.remove());
-            let txt=(clone.innerText||'').replace(/\s+/g,' ').trim();
-            const ctl=controlLabel(); if(ctl) txt += (txt?'. ':'') + ctl;
-            return txt;
-        }
-        function formText(){
-            if(!form) return '';
-            const parts=[];
-            const title=document.querySelector('.screen-title'); if(title&&isVisible(title)) parts.push(title.textContent.trim());
-            form.querySelectorAll('input').forEach(i=>{
-                if(isVisible(i)) parts.push(i.getAttribute('placeholder')||i.name||i.id||'field');
+        // Simple form submit (uses a local fetch mirroring visual mode)
+        const simpleForm = document.getElementById('registerSimpleForm');
+        if(simpleForm){
+            simpleForm.addEventListener('submit', async (e)=>{
+                e.preventDefault();
+                const u = document.getElementById('simple-username');
+                const p = document.getElementById('simple-password');
+                if(!u.value.trim() || !p.value){
+                    window.showToast && window.showToast('Please enter Username and Password','error');
+                    if(!u.value.trim()) u.focus(); else p.focus();
+                    return;
+                }
+                try{
+                    window.showToast && window.showToast('Registering…','success');
+                    const res = await fetch('/api/register.php', {
+                        method:'POST',
+                        headers:{'Content-Type':'application/json'},
+                        body: JSON.stringify({ username: u.value.trim(), password: p.value }),
+                        credentials: 'same-origin'
+                    });
+                    const data = await res.json().catch(()=> ({}));
+                    if(!res.ok || data.error) throw new Error(data.error || `Registration failed (${res.status})`);
+                    window.showToast && window.showToast('Account created! Redirecting…','success');
+                    setTimeout(()=>{ window.location.href='profile.html'; }, 600);
+                }catch(err){
+                    window.showToast && window.showToast(err.message || 'Could not register.','error');
+                }
             });
-            const ctl=controlLabel(); if(ctl) parts.push(ctl);
-            return parts.join('. ');
         }
-        const rp=el('ttsReadPage'), rf=el('ttsReadForm'), st=el('ttsStop');
-        if(rp) rp.addEventListener('click',()=>speak(pageText()));
-        if(rf) rf.addEventListener('click',()=>speak(formText()));
-        if(st) st.addEventListener('click',()=>{ if(synth) synth.cancel(); });
-    });
+    })();
 </script>
 
 <!-- Toast -->
@@ -426,11 +316,9 @@
     };
 </script>
 
-<!-- Floating reviews -->
+<!-- Floating reviews (unchanged) -->
 <aside id="reviewsFloat" class="reviews-float" role="complementary" aria-label="User reviews" aria-live="off"></aside>
-
 <script>
-
     const REVIEWS = [
         { text:"I was keeping everything in a spreadsheet before this. Now I just add a contact when I meet someone, and a quick search brings them right up. Feels simple and private; My contacts stay mine.", name:"Alex N.",   title:"Freelance developer",  avatar:"AN" },
         { text:"Registration took a minute and I was off. I like that I can fix a phone number or delete a duplicate without digging through menus. It does the basics perfectly and doesn’t try to be a CRM.",    name:"Priya S.",  title:"Small-business manager",          avatar:"PS" },
