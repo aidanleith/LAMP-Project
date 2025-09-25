@@ -282,7 +282,7 @@
                 }
                 try{
                     window.showToast && window.showToast('Logging in…','success');
-                    const res = await fetch('/contact_manager/api/login.php', {
+                    const res = await fetch('contact_manager/api/login.php', {
                         method:'POST',
                         headers:{'Content-Type':'application/json'},
                         body: JSON.stringify({ username: u.value.trim(), password: p.value }),
