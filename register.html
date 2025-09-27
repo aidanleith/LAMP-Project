@@ -53,6 +53,17 @@
                         <h2 class="screen-title">Create your account</h2>
 
                         <form id="registerForm" class="auth-form" novalidate>
+                            
+                            <div class="field">
+                                <input id="first_name" name="first_name" type="text"
+                                       class="glass-input" placeholder="first name" required autocomplete="name">
+                            </div>
+
+                            <div class="field">
+                                <input id="last_name" name="last_name" type="text"
+                                       class="glass-input" placeholder="last name" required autocomplete="name">
+                            </div>
+
                             <div class="field">
                                 <input id="username" name="username" type="text"
                                        class="glass-input" placeholder="Username" required autocomplete="username">
@@ -149,6 +160,8 @@
         }
 
         async function submitRegistration(){
+            const fn=form.querySelector('#first_name');
+            const l=form.querySelector('#last_name');
             const u=form.querySelector('#username');
             const p=form.querySelector('#password');
 
@@ -166,7 +179,7 @@
             const res = await fetch('api/register.php', {
                 method:'POST',
                 headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({ username: u.value.trim(), password: p.value }),
+                body: JSON.stringify({ first_name: fn.value.trim() , last_name: l.value.trim() , username: u.value.trim(), password: p.value }),
                 credentials: 'same-origin'
             });
 
