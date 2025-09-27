@@ -284,7 +284,7 @@
                 try{
                     window.showToast && window.showToast('Logging in…','success');
                     //commit
-                    const res = await fetch('http://cop4331-lamp.xyz/contact_manager/api/login.php', {
+                    const res = await fetch('api/login.php', {
                         method:'POST',
                         headers:{'Content-Type':'application/json'},
                         body: JSON.stringify({ username: u.value.trim(), password: p.value }),
