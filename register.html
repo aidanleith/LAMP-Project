@@ -219,6 +219,8 @@
 
             if (data.id) {
                 localStorage.setItem('userId', data.id);
+                localStorage.setItem('userFirstName', data.firstName);
+                localStorage.setItem('userLastName', data.lastName);
             } 
             else {
                 throw new Error('Login response was missing user information.');
