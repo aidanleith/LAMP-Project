@@ -53,6 +53,17 @@
                         <h2 class="screen-title">Create your account</h2>
 
                         <form id="registerForm" class="auth-form" novalidate>
+
+                            <div class="field">
+                                <input id="first_name" name="first_name" type="text"
+                                       class="glass-input" placeholder="first name" required autocomplete="name">
+                            </div>
+
+                            <div class="field">
+                                <input id="last_name" name="last_name" type="text"
+                                       class="glass-input" placeholder="last name" required autocomplete="name">
+                            </div>
+
                             <div class="field">
                                 <input id="username" name="username" type="text"
                                        class="glass-input" placeholder="Username" required autocomplete="username">
@@ -84,6 +95,15 @@
     <section class="simple-auth" aria-hidden="true" hidden>
         <h2 class="simple-title">Create your account</h2>
         <form id="registerSimpleForm" class="simple-form" novalidate>
+
+            <div class="simple-field">
+        <label for="simple-firstName">First Name</label>
+        <input id="simple-firstName" name="firstName" type="text" required />
+    </div>
+    <div class="simple-field">
+        <label for="simple-lastName">Last Name</label>
+        <input id="simple-lastName" name="lastName" type="text" required />
+    </div>
             <div class="simple-field">
                 <label for="simple-username">Username</label>
                 <input id="simple-username" name="username" type="text" autocomplete="username" required />
@@ -149,6 +169,8 @@
         }
 
         async function submitRegistration(){
+            const fn=form.querySelector('#first_name');
+            const l=form.querySelector('#last_name');
             const u=form.querySelector('#username');
             const p=form.querySelector('#password');
 
@@ -166,13 +188,21 @@
             const res = await fetch('api/register.php', {
                 method:'POST',
                 headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({ username: u.value.trim(), password: p.value }),
+                body: JSON.stringify({ first_name: fn.value.trim() , last_name: l.value.trim() , username: u.value.trim(), password: p.value }),
                 credentials: 'same-origin'
             });
 
             const data = await res.json().catch(()=> ({}));
             if(!res.ok || data.error){
                 throw new Error(data.error || `Registration failed (${res.status})`);
+            }
+
+            if (data.id) {
+                localStorage.setItem('userId', data.id);
+                localStorage.setItem('userFirstName', data.firstName);
+                localStorage.setItem('userLastName', data.lastName);
+            } else {
+                throw new Error('Registration response not working');
             }
 
             // Success -> route
@@ -284,7 +314,7 @@
                 }
                 try{
                     window.showToast && window.showToast('Registering…','success');
-                    const res = await fetch('/api/register.php', {
+                    const res = await fetch('api/register.php', {
                         method:'POST',
                         headers:{'Content-Type':'application/json'},
                         body: JSON.stringify({ username: u.value.trim(), password: p.value }),
