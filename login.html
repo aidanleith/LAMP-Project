@@ -181,7 +181,7 @@
             handle.style.pointerEvents='none';
             window.showToast && window.showToast('Logging in…','success');
 
-            const res = await fetch('http://134.199.196.132/contact_manager/api/login.php', {
+            const res = await fetch('api/login.php', {
                 method:'POST',
                 headers:{'Content-Type':'application/json'},
                 body: JSON.stringify({ username: u.value.trim(), password: p.value }),
@@ -194,9 +194,9 @@
             }
 
             if (data.id) {
-            localStorage.setItem('userId', data.id);
-            localStorage.setItem('userFirstName', data.firstName);
-            localStorage.setItem('userLastName', data.lastName);
+                localStorage.setItem('userId', data.id);
+                localStorage.setItem('userFirstName', data.firstName);
+                localStorage.setItem('userLastName', data.lastName);
             } else {
                 throw new Error('Login response was missing user information.');
             }
