@@ -188,7 +188,6 @@
         }
 
         async function submitRegistration(){
-            localStorage.clear();
             const fn=form.querySelector('#first_name');
             const l=form.querySelector('#last_name');
             const u=form.querySelector('#username');
@@ -216,6 +215,15 @@
             const data = await res.json().catch(()=> ({}));
             if(!res.ok || data.error){
                 throw new Error(data.error || `Registration failed (${res.status})`);
+            }
+
+            if (data.id) {
+                localStorage.setItem('userId', data.id);
+                localStorage.setItem('userFirstName', data.firstName);
+                localStorage.setItem('userLastName', data.lastName);
+            } 
+            else {
+                throw new Error('Login response was missing user information.');
             }
 
             // Success -> route
