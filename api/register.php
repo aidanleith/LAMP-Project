@@ -21,7 +21,7 @@
 		$stmt->bind_param("ssss", $inData["first_name"], $inData["last_name"], $inData["username"], $inData["password"]);
         if ($stmt->execute()) {
             $newUserId = $conn->insert_id;
-            returnWithInfo$inData["first_name"], $inData["last_name"], $newUserId);
+            returnWithInfo($inData["first_name"], $inData["last_name"], $newUserId);
         } else {
             returnWithError($stmt->error);
         }
