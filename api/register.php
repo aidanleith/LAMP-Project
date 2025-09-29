@@ -23,10 +23,11 @@
 	{
 		$stmt = $conn->prepare("INSERT INTO users (first_name,last_name,username,`password`) VALUES(?,?,?,?)");
 		$stmt->bind_param("ssss", $inData["first_name"], $inData["last_name"], $inData["username"], $inData["password"]);
-		if ($stmt->execute()) {
-            echo "User inserted successfully";
+        if ($stmt->execute()) {
+            $newUserId = $conn->insert_id;
+            returnWithInfo($inData["first_name"], $inData["last_name"], $newUserId);
         } else {
-            echo "Error: " . $stmt->error;
+            returnWithError($stmt->error);
         }
 
 		$stmt->close();
